@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - mongo
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/meubanco
+      SPRING_DATASOURCE_USERNAME: usuario
+      SPRING_DATASOURCE_PASSWORD: senha
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/meu_mongo_db
+      SPRING_DATASOURCE_MYSQL_URL: jdbc:mysql://mysql:3306/meu_mysql_db
+      SPRING_DATASOURCE_MYSQL_USERNAME: root
+      SPRING_DATASOURCE_MYSQL_PASSWORD: senha
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: meubanco
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: senha
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: senha
+      MYSQL_DATABASE: meu_mysql_db
+      MYSQL_USER: usuario
+      MYSQL_PASSWORD: senha
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  postgres_data:
+  mongo_data:
+  mysql_data:

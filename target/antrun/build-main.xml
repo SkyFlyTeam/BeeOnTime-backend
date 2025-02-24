@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <zip destfile="C:\Users\andre\OneDrive\Documentos\Private\Salerno\Pessoal\fatec\3_sem\desenvolvimento-web\eclipse\docker-example\target/app.zip">
+    <zipfileset dir="C:\Users\andre\OneDrive\Documentos\Private\Salerno\Pessoal\fatec\3_sem\desenvolvimento-web\eclipse\docker-example\target/docker"/>
+    <zipfileset includes="docker-example.jar" dir="C:\Users\andre\OneDrive\Documentos\Private\Salerno\Pessoal\fatec\3_sem\desenvolvimento-web\eclipse\docker-example\target"/>
+  </zip>
+</target>
+</project>
