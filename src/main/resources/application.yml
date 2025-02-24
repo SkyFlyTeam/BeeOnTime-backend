@@ -5,18 +5,18 @@ spring:
 
   # Postgres Configuration
   datasource:
-    url: jdbc:postgresql://postgres:5432/meubanco
-    username: usuario
-    password: senha
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
   # MongoDB Configuration
   data:
     mongodb:
-      uri: mongodb://mongo:27017/meu_mongo_db
+      uri: ${SPRING_DATA_MONGODB_URI}
 
   # MySQL Configuration
   mysql:
     datasource:
-      url: jdbc:mysql://mysql:3306/meu_mysql_db
-      username: root
-      password: senha
+      url: ${SPRING_DATASOURCE_MYSQL_URL}
+      username: ${SPRING_DATASOURCE_MYSQL_USERNAME}
+      password: ${SPRING_DATASOURCE_MYSQL_PASSWORD}
