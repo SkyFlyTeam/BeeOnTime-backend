@@ -4,6 +4,7 @@ services:
   app:
     build: .
     container_name: app
+    restart: always
     ports:
       - "8080:8080"
     depends_on:
@@ -11,18 +12,25 @@ services:
       - mysql
       - mongo
       - redis
+    env_file:
+      - .env
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_MYSQL_URL: ${SPRING_DATASOURCE_MYSQL_URL}
+      SPRING_DATASOURCE_MYSQL_USERNAME: ${SPRING_DATASOURCE_MYSQL_USERNAME}
+      SPRING_DATASOURCE_MYSQL_PASSWORD: ${SPRING_DATASOURCE_MYSQL_PASSWORD}
       SPRING_DATA_MONGODB_URI: ${SPRING_DATA_MONGODB_URI}
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
-  
+
   postgres:
     image: postgres:15
     container_name: postgres
     restart: always
+    env_file:
+      - .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -36,11 +44,14 @@ services:
     image: mysql:8
     container_name: mysql
     restart: always
+    env_file:
+      - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PORT: ${MYSQL_PORT}
     ports:
       - "${MYSQL_PORT}:3306"
     volumes:
@@ -50,8 +61,12 @@ services:
     image: mongo:6
     container_name: mongo
     restart: always
+    env_file:
+      - .env
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - "${MONGO_PORT}:27017"
     volumes:

@@ -1,0 +1,43 @@
+spring:
+  thymeleaf:
+    cache: false
+  main:
+    banner-mode: off
+
+  # Configuração do PostgreSQL (Banco Principal)
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update  # Pode ser "none", "update", "create", ou "create-drop"
+    show-sql: true  # Exibir SQL no console
+
+   # Configuração do MongoDB
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI}
+
+  # Configuração do Redis
+  redis:
+    host: redis
+    port: 6379
+
+# Actuator para Debug
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+# Configuração do MySQL (Banco Secundário)
+mysql:
+  datasource:
+    url: ${SPRING_DATASOURCE_MYSQL_URL}
+    username: ${SPRING_DATASOURCE_MYSQL_USERNAME}
+    password: ${SPRING_DATASOURCE_MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver

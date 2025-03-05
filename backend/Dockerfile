@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copiar o arquivo JAR do build para dentro do container
-COPY target/docker-example.jar app.jar
+COPY target/backend.jar app.jar
 
 # Expor a porta da aplicação (deve coincidir com o application.properties)
 EXPOSE 8080
