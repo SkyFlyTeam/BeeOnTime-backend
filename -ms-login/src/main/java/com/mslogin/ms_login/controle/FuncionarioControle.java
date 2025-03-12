@@ -1,8 +1,10 @@
 package com.mslogin.ms_login.controle;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mslogin.ms_login.entidade.Funcionario;
@@ -23,6 +25,9 @@ public class FuncionarioControle {
     @Autowired
     private FuncionarioRepositorio repositorio;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping
     public List<Funcionario> obterFuncionario() {
         return repositorio.findAll();
@@ -30,12 +35,18 @@ public class FuncionarioControle {
 
     @PostMapping
     public void cadastrarFuncionario(@RequestBody Funcionario funcionario) {
+
+        funcionario.setFuncSenha(passwordEncoder.encode(funcionario.getFuncSenha()));
         repositorio.save(funcionario);
     }
 
     @GetMapping("/{id}")
     public Funcionario obterFuncionarioId(@PathVariable Long id) {
         return repositorio.findById(id).orElseThrow(() -> new RuntimeException("Funcionario not found"));
+    }
+
+    public Optional<Funcionario> obterFuncionarioEmail(String email) {
+       return repositorio.findByFuncEmail(email);
     }
 
     @DeleteMapping
