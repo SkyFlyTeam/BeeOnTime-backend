@@ -1,8 +1,11 @@
 package com.fatec.ms_usuario.controle;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.ms_usuario.entidade.Usuario;
@@ -22,53 +25,75 @@ public class UsuarioControle {
     @Autowired
     private UsuarioRepositorio repositorio;
 
-    @GetMapping("/")
-    public List<Usuario> obterUsuarios() {
-        return repositorio.findAll();
+    @GetMapping("/usuarios")
+    public ResponseEntity<List<Usuario>> obterUsuarios() {
+		List<Usuario> usuarios = repositorio.findAll();
+		return new ResponseEntity<>(usuarios, HttpStatus.FOUND);
+	}
+
+
+    @PostMapping("/usuario/cadastrar")
+    public ResponseEntity<?> cadastrarUsuario(@RequestBody Usuario novo) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        if (novo != null) {
+            repositorio.save(novo);
+            status = HttpStatus.OK;
+        }
+        return new ResponseEntity<>(status);
+
     }
 
-    @PostMapping("/cadastrar")
-    public void cadastrarUsuario(@RequestBody Usuario alvo) {
-        repositorio.save(alvo);
+
+    @GetMapping("/usuario/{id}")
+    public ResponseEntity<Usuario> obterUsuarioId(@PathVariable Long id) {
+    	Usuario usuario = repositorio.findById(id).orElse(null);
+		
+  		if (usuario == null) {
+  			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+  		} else {
+  			return new ResponseEntity<>(usuario, HttpStatus.OK);
+  		}
     }
+    
+    
+    @PutMapping("/usuario/atualizar")
+    public ResponseEntity<?> atualizarUsuario(@RequestBody Usuario usuario) {
+        Optional<Usuario> usuarioOptional = repositorio.findById(usuario.getUsuario_cod());
 
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Erro: Usuário com ID " + usuario.getUsuario_cod() + " não encontrado.");
+        }
 
-    @GetMapping("/buscar-id/{id}")
-    public Usuario obterUsuarioId(@PathVariable Long id) {
-        return repositorio.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-    }
-
-    @PutMapping("/atualizar-id")
-    public void atualizarUsuario(@RequestBody Usuario usuario) {
-        Usuario alvo = repositorio.findById(usuario.getUsuario_cod()).get();
-
+        Usuario alvo = usuarioOptional.get();
         alvo.setUsuario_nome(usuario.getUsuario_nome());
-
         alvo.setUsuario_cpf(usuario.getUsuario_cpf());
-
         alvo.setUsuario_nRegistro(usuario.getUsuario_nRegistro());
-        
         alvo.setUsuario_cargaHoraria(usuario.getUsuario_cargaHoraria());
-        
         alvo.setUsuario_contratacao(usuario.getUsuario_contratacao());
-        
         alvo.setUsuario_dataContratacao(usuario.getUsuario_dataContratacao());
-        
         alvo.setUsuario_senha(usuario.getUsuario_senha());
-        
         alvo.setUsuario_email(usuario.getUsuario_email());
-        
         alvo.setUsuario_dataNascimento(usuario.getUsuario_dataNascimento());
 
         repositorio.save(alvo);
+        return ResponseEntity.ok("Usuário atualizado com sucesso.");
     }
+
+
     
     
-    @DeleteMapping("/{id}")
-    public void deletarUsuario(@RequestBody Usuario usuario) {
-        try {
-            Usuario alvo = repositorio.findById(usuario.getUsuario_cod()).get();
-            repositorio.delete(alvo);
-        } finally {System.err.println("500 error u not found");}
+    @DeleteMapping("/usuario/excluir")
+    public ResponseEntity<?> deletarUsuario(@RequestBody Usuario exclusao) {
+        Optional<Usuario> usuarioOptional = repositorio.findById(exclusao.getUsuario_cod());
+
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Erro: Usuário com ID " + exclusao.getUsuario_cod() + " não encontrado.");
+        }
+
+        repositorio.delete(usuarioOptional.get());
+        return ResponseEntity.ok("Usuário excluído com sucesso.");
     }
+
 }

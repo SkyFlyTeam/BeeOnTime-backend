@@ -1,6 +1,9 @@
 package com.fatec.ms_usuario.entidade;
 
+import java.time.LocalDate;
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,16 +27,21 @@ public class Usuario {
 	private String usuario_cpf;
 
 	@Column
+	private String usuario_cargo;
+	
+	@Column
 	private Double usuario_nRegistro;
 
 	@Column
 	private Integer usuario_cargaHoraria;
 
 	@Column
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private String usuario_contratacao;
 
 	@Column
-	private Date usuario_dataContratacao;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate usuario_dataContratacao;
 
 	@Column
 	private String usuario_senha;
@@ -42,7 +50,8 @@ public class Usuario {
 	private String usuario_email;
 
 	@Column
-	private String usuario_dataNascimento;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate usuario_dataNascimento;
 
 	public Long getUsuario_cod() {
 		return usuario_cod;
@@ -66,6 +75,14 @@ public class Usuario {
 
 	public void setUsuario_cpf(String usuario_cpf) {
 		this.usuario_cpf = usuario_cpf;
+	}
+	
+	public String getUsuario_cargo() {
+		return usuario_cargo;
+	}
+
+	public void setUsuario_cargo(String usuario_cargo) {
+		this.usuario_cargo = usuario_cargo;
 	}
 
 	public Double getUsuario_nRegistro() {
@@ -92,11 +109,11 @@ public class Usuario {
 		this.usuario_contratacao = usuario_contratacao;
 	}
 
-	public Date getUsuario_dataContratacao() {
+	public LocalDate getUsuario_dataContratacao() {
 		return usuario_dataContratacao;
 	}
 
-	public void setUsuario_dataContratacao(Date usuario_dataContratacao) {
+	public void setUsuario_dataContratacao(LocalDate usuario_dataContratacao) {
 		this.usuario_dataContratacao = usuario_dataContratacao;
 	}
 
@@ -116,11 +133,11 @@ public class Usuario {
 		this.usuario_email = usuario_email;
 	}
 
-	public String getUsuario_dataNascimento() {
+	public LocalDate getUsuario_dataNascimento() {
 		return usuario_dataNascimento;
 	}
 
-	public void setUsuario_dataNascimento(String usuario_dataNascimento) {
+	public void setUsuario_dataNascimento(LocalDate usuario_dataNascimento) {
 		this.usuario_dataNascimento = usuario_dataNascimento;
 	}
 
