@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @RestController
+@RequestMapping("/usuario")
 public class UsuarioControle {
 
     @Autowired
@@ -28,11 +30,11 @@ public class UsuarioControle {
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> obterUsuarios() {
 		List<Usuario> usuarios = repositorio.findAll();
-		return new ResponseEntity<>(usuarios, HttpStatus.FOUND);
+		return new ResponseEntity<>(usuarios, HttpStatus.OK);
 	}
 
 
-    @PostMapping("/usuario/cadastrar")
+    @PostMapping("/cadastrar")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody Usuario novo) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         if (novo != null) {
@@ -44,7 +46,7 @@ public class UsuarioControle {
     }
 
 
-    @GetMapping("/usuario/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Usuario> obterUsuarioId(@PathVariable Long id) {
     	Usuario usuario = repositorio.findById(id).orElse(null);
 		
@@ -56,7 +58,7 @@ public class UsuarioControle {
     }
     
     
-    @PutMapping("/usuario/atualizar")
+    @PutMapping("/atualizar")
     public ResponseEntity<?> atualizarUsuario(@RequestBody Usuario usuario) {
         Optional<Usuario> usuarioOptional = repositorio.findById(usuario.getUsuario_cod());
 
@@ -70,11 +72,11 @@ public class UsuarioControle {
         alvo.setUsuario_cpf(usuario.getUsuario_cpf());
         alvo.setUsuario_nRegistro(usuario.getUsuario_nRegistro());
         alvo.setUsuario_cargaHoraria(usuario.getUsuario_cargaHoraria());
-        alvo.setUsuario_contratacao(usuario.getUsuario_contratacao());
+        alvo.setUsuarioTipoContratacao(usuario.getUsuarioTipoContratacao());
         alvo.setUsuario_dataContratacao(usuario.getUsuario_dataContratacao());
         alvo.setUsuario_senha(usuario.getUsuario_senha());
         alvo.setUsuario_email(usuario.getUsuario_email());
-        alvo.setUsuario_dataNascimento(usuario.getUsuario_dataNascimento());
+        alvo.setUsuario_DataNascimento(usuario.getUsuario_DataNascimento());
 
         repositorio.save(alvo);
         return ResponseEntity.ok("Usuário atualizado com sucesso.");
@@ -83,7 +85,7 @@ public class UsuarioControle {
 
     
     
-    @DeleteMapping("/usuario/excluir")
+    @DeleteMapping("/excluir")
     public ResponseEntity<?> deletarUsuario(@RequestBody Usuario exclusao) {
         Optional<Usuario> usuarioOptional = repositorio.findById(exclusao.getUsuario_cod());
 

@@ -25,33 +25,33 @@ public class Usuario {
 
 	@Column
 	private String usuario_cpf;
-
-	@Column
-	private String usuario_cargo;
 	
 	@Column
 	private Double usuario_nRegistro;
-
+	
 	@Column
 	private Integer usuario_cargaHoraria;
-
+	
 	@Column
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private String usuario_contratacao;
-
+	private String usuarioTipoContratacao;
+	
 	@Column
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate usuario_dataContratacao;
-
+	
 	@Column
 	private String usuario_senha;
-
+	
 	@Column
 	private String usuario_email;
-
+	
 	@Column
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate usuario_dataNascimento;
+	private LocalDate usuario_DataNascimento;
+	
+	@Column
+	private String usuario_cargo;
+	
 
 	public Long getUsuario_cod() {
 		return usuario_cod;
@@ -77,14 +77,6 @@ public class Usuario {
 		this.usuario_cpf = usuario_cpf;
 	}
 	
-	public String getUsuario_cargo() {
-		return usuario_cargo;
-	}
-
-	public void setUsuario_cargo(String usuario_cargo) {
-		this.usuario_cargo = usuario_cargo;
-	}
-
 	public Double getUsuario_nRegistro() {
 		return usuario_nRegistro;
 	}
@@ -92,7 +84,7 @@ public class Usuario {
 	public void setUsuario_nRegistro(Double usuario_nRegistro) {
 		this.usuario_nRegistro = usuario_nRegistro;
 	}
-
+	
 	public Integer getUsuario_cargaHoraria() {
 		return usuario_cargaHoraria;
 	}
@@ -100,15 +92,16 @@ public class Usuario {
 	public void setUsuario_cargaHoraria(Integer usuario_cargaHoraria) {
 		this.usuario_cargaHoraria = usuario_cargaHoraria;
 	}
-
-	public String getUsuario_contratacao() {
-		return usuario_contratacao;
+	
+	
+	public String getUsuarioTipoContratacao() {
+		return usuarioTipoContratacao;
 	}
-
-	public void setUsuario_contratacao(String usuario_contratacao) {
-		this.usuario_contratacao = usuario_contratacao;
+	
+	public void setUsuarioTipoContratacao(String usuarioTipoContratacao) {
+		this.usuarioTipoContratacao = usuarioTipoContratacao;
 	}
-
+	
 	public LocalDate getUsuario_dataContratacao() {
 		return usuario_dataContratacao;
 	}
@@ -124,6 +117,7 @@ public class Usuario {
 	public void setUsuario_senha(String usuario_senha) {
 		this.usuario_senha = usuario_senha;
 	}
+	
 
 	public String getUsuario_email() {
 		return usuario_email;
@@ -133,12 +127,22 @@ public class Usuario {
 		this.usuario_email = usuario_email;
 	}
 
-	public LocalDate getUsuario_dataNascimento() {
-		return usuario_dataNascimento;
+	
+	public LocalDate getUsuario_DataNascimento() {
+		return usuario_DataNascimento;
+	}
+	
+	public void setUsuario_DataNascimento(LocalDate usuario_DataNascimento) {
+		this.usuario_DataNascimento = usuario_DataNascimento;
 	}
 
-	public void setUsuario_dataNascimento(LocalDate usuario_dataNascimento) {
-		this.usuario_dataNascimento = usuario_dataNascimento;
+
+	public String getUsuario_cargo() {
+		return usuario_cargo;
+	}
+	
+	public void setUsuario_cargo(String usuario_cargo) {
+		this.usuario_cargo = usuario_cargo;
 	}
 
 }
