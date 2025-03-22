@@ -8,9 +8,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.ms_usuario.entidade.Jornada;
 import com.fatec.ms_usuario.entidade.Usuario;
+import com.fatec.ms_usuario.repositorio.JornadaRepositorio;
 import com.fatec.ms_usuario.repositorio.UsuarioRepositorio;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,13 +22,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioControle {
 
     @Autowired
     private UsuarioRepositorio repositorio;
+    
+    @Autowired
+    private JornadaRepositorio jornadaRepositorio;
 
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> obterUsuarios() {
@@ -94,8 +100,13 @@ public class UsuarioControle {
                     .body("Erro: Usuário com ID " + exclusao.getUsuario_cod() + " não encontrado.");
         }
 
-        repositorio.delete(usuarioOptional.get());
-        return ResponseEntity.ok("Usuário excluído com sucesso.");
-    }
+        // Excluir as jornadas associadas a este usuário antes de excluir o usuário
+        List<Jornada> jornadas = jornadaRepositorio.findByUsuario(usuarioOptional.get());
+        for (Jornada jornada : jornadas) {
+            jornadaRepositorio.delete(jornada);
+        }
 
+        repositorio.delete(usuarioOptional.get());
+        return ResponseEntity.ok("Usuário e suas jornadas excluídos com sucesso.");
+    }
 }

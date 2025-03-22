@@ -2,6 +2,7 @@ package com.fatec.ms_usuario.entidade;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -10,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
@@ -27,7 +29,7 @@ public class Usuario {
 	private String usuario_cpf;
 	
 	@Column
-	private Double usuario_nRegistro;
+	private Double usuario_nrRegistro;
 	
 	@Column
 	private Integer usuario_cargaHoraria;
@@ -52,6 +54,8 @@ public class Usuario {
 	@Column
 	private String usuario_cargo;
 	
+	@OneToMany(mappedBy = "usuario")
+	private List<Jornada> jornadas;
 
 	public Long getUsuario_cod() {
 		return usuario_cod;
@@ -78,11 +82,11 @@ public class Usuario {
 	}
 	
 	public Double getUsuario_nRegistro() {
-		return usuario_nRegistro;
+		return usuario_nrRegistro;
 	}
 
 	public void setUsuario_nRegistro(Double usuario_nRegistro) {
-		this.usuario_nRegistro = usuario_nRegistro;
+		this.usuario_nrRegistro = usuario_nRegistro;
 	}
 	
 	public Integer getUsuario_cargaHoraria() {
