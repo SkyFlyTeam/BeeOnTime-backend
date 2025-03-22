@@ -64,3 +64,4 @@ node_modules/
 secrets/
 application-*.yml
 application-*.properties
+*.zip
