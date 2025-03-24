@@ -20,18 +20,31 @@ public class Solicitacao {
     private String solicitacaoMensagem;
 
     @Lob
-    @Column(name = "solicitacao_anexo")
+    @Column(name = "solicitacao_anexo", columnDefinition = "LONGBLOB")
     private byte[] solicitacaoAnexo;
+    
+    @Column(name = "solicitacao_anexo_nome")
+    private String solicitacaoAnexoNome;
+
 
     @Column(name = "solicitacao_devolutiva", length = 120)
     private String solicitacaoDevolutiva;
 
     @Column(name = "solicitacao_dataPeriodo", nullable = false, updatable = false)
     private LocalDate solicitacaoDataPeriodo = LocalDate.now();
+    
+    @Column(name = "usuario_cod")
+    private long usuarioCod;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "solicitacao_status")
     private SolicitacaoStatus solicitacaoStatus = SolicitacaoStatus.PENDENTE;
+    
+    @Transient
+    private String usuarioNome;
+    
+    @Transient
+    private String usuarioCargo;
     
     @ManyToOne
     @JoinColumn(name = "tipoSolicitacaoCod", nullable = false)
@@ -91,6 +104,38 @@ public class Solicitacao {
 
 	public void setTipoSolicitacaoCod(SolicitacaoTipo tipoSolicitacaoCod) {
 		this.tipoSolicitacaoCod = tipoSolicitacaoCod;
+	}
+
+	public String getUsuarioNome() {
+		return usuarioNome;
+	}
+
+	public void setUsuarioNome(String usuarioNome) {
+		this.usuarioNome = usuarioNome;
+	}
+
+	public String getUsuarioCargo() {
+		return usuarioCargo;
+	}
+
+	public void setUsuarioCargo(String usuarioCargo) {
+		this.usuarioCargo = usuarioCargo;
+	}
+
+	public long getUsuarioCod() {
+		return usuarioCod;
+	}
+
+	public void setUsuarioCod(long usuarioCod) {
+		this.usuarioCod = usuarioCod;
+	}
+
+	public String getSolicitacaoAnexoNome() {
+		return solicitacaoAnexoNome;
+	}
+
+	public void setSolicitacaoAnexoNome(String solicitacaoAnexoNome) {
+		this.solicitacaoAnexoNome = solicitacaoAnexoNome;
 	}
 
 }
