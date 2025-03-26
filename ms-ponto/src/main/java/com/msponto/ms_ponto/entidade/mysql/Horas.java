@@ -7,8 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"usuarioCod", "horasData"}))
 public class Horas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,11 +67,11 @@ public class Horas {
         this.horasNoturnas = horasNoturnas;
     }
 
-    public Float gethorasFaltantes() {
+    public Float getHorasFaltantes() {
         return horasFaltantes;
     }
 
-    public void sethorasFaltantes(Float horasFaltantes) {
+    public void setHorasFaltantes(Float horasFaltantes) {
         this.horasFaltantes = horasFaltantes;
     }
 
@@ -76,7 +79,7 @@ public class Horas {
         return horasData;
     }
 
-    public void setHoras_data(LocalDate horasData) {
+    public void setHorasData(LocalDate horasData) {
         this.horasData = horasData;
     }
 

@@ -7,13 +7,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.msponto.ms_ponto.dto.UsuarioDTO;
+import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos;
 import com.msponto.ms_ponto.entidade.mysql.Horas;
+import com.msponto.ms_ponto.modelo.HorasAtualizador;
+import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 import com.msponto.ms_ponto.repositorio.mysql.HorasRepositorio;
 
 @Service
 public class HorasServico {
     @Autowired
     private HorasRepositorio horas_repo;
+
+    @Autowired
+    private UsuarioClient usuarioClient;
 
     public List<Horas> getUsuarioHoras(Long usuario_cod){
         List<Horas> usuario_horas = horas_repo.findByUsuarioCod(usuario_cod);
@@ -48,4 +55,61 @@ public class HorasServico {
             return false;
         }
     }
+
+    public Horas createEmptyHoras(Long usuario_cod, LocalDate data){
+        Horas horas = new Horas(); 
+        
+        horas.setUsuarioCod(usuario_cod);
+        horas.setHorasExtras(0.0f); 
+        horas.setHorasNoturnas(0.0f);
+        horas.setHorasTrabalhadas(0.0f);
+        horas.setHorasFaltantes(0.0f);
+        horas.setHorasData(data);
+
+        horas_repo.save(horas);
+
+        return horas;
+    }
+
+    public Boolean updateHoras(Horas horas_att){
+         try {
+            Optional<Horas> horas_existente = horas_repo.findById(horas_att.getHorasCod());
+            if (horas_existente.isPresent()) {
+                Horas horas = horas_existente.get();
+                
+                HorasAtualizador atualizador = new HorasAtualizador();
+                atualizador.atualizarDados(horas_att, horas);
+
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            System.out.println("deu erro: " + e);
+            return false;
+        }
+    }
+
+//     public Horas calculatingHours(MarcacaoPontos mPontos){
+//         try {
+//            // Pegando carga hóraria do usuário
+//            Long usuario_cod = mPontos.getUsuarioCod();
+//            UsuarioDTO usuario =  usuarioClient.getUsuarioByCod(usuario_cod);
+//            Integer usuario_carga = usuario.getUsuario_cargaHoraria();
+
+//            mPontos.getPontos().
+//            });
+//            if (horas_existente.isPresent()) {
+//                Horas horas = horas_existente.get();
+               
+//                HorasAtualizador atualizador = new HorasAtualizador();
+//                atualizador.atualizarDados(horas_att, horas);
+
+//                return true;
+//            }
+//            return false;
+//        } catch (Exception e) {
+//            System.out.println("deu erro: " + e);
+//            return false;
+//        }
+//    }
 }

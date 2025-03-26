@@ -1,5 +1,6 @@
 package com.msponto.ms_ponto.servico;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,38 +20,65 @@ public class MarcacaoPontosServico {
     @Autowired
     HorasServico horas_servico;
 
+    public List<MarcacaoPontos> getPontosUsuario(Long usuario_cod) {
+        List<MarcacaoPontos> pontos = mponto_repo.findByUsuarioCod(usuario_cod);
+        return pontos;
+    }
+
+    public List<MarcacaoPontos> getPontosUsuarioByPeriod(Long mpontos_cod, LocalDate start_date, LocalDate end_date){
+        List<MarcacaoPontos> mpontos = mponto_repo.findByUsuarioCodAndDataBetween(mpontos_cod, start_date, end_date);
+        return mpontos;
+    }
+
+    public MarcacaoPontos getPontosUsuarioByCodHoras(Long usuario_cod, Long horas_cod){
+        MarcacaoPontos mpontos = mponto_repo.findByUsuarioCodAndHorasCod(usuario_cod, horas_cod);
+        return mpontos;
+    }
 
     public Boolean baterPonto(MarcacaoPontos mponto) {
         try {
-            Long horasCod = horas_servico.getHorasCodByDate(mponto.getData()).getHorasCod();
-            mponto.setHorasCod(horasCod);
-
             Optional<Horas> horas_existente = horas_servico.getHorasByCod(mponto.getHorasCod());
-            
-            // Marcação de ponto já existe, só irei adicionar
+        
             if(horas_existente.isPresent()){
                 Horas horas = horas_existente.get();
                 Optional<MarcacaoPontos> mpontos_existente = mponto_repo.findByHorasCod(horas.getHorasCod());
-            
-            }else{ // Nova marcação de ponto
+                // Marcação de ponto já existe, só irei adicionar
+                if(mpontos_existente.isPresent()){
+                    MarcacaoPontos mponto_existe = mpontos_existente.get();
+                    mponto_existe.getPontos().add(mponto.getPontos().getFirst());
+                    mponto_repo.save(mponto_existe);
 
-                mponto_repo.save(mponto);
-            }
-            
-            return true;
+                    // Atualizando a quantidade de horas 
+                    
+                }else{
+                    mponto.setData(LocalDate.now());
+                    mponto_repo.save(mponto);
+                }
+                return true;
+            } 
+            return false;
         } catch (Exception e) {
             System.out.println("deu erro" + e);
             return false;
         }
     }
     
-    public List<MarcacaoPontos> getPontosUsuario(Long usuario_cod) {
-        List<MarcacaoPontos> pontos = mponto_repo.findByUsuarioCod(usuario_cod);
-        return pontos;
-    }
+    public Boolean updateMponto(MarcacaoPontos mpontos_att) {
+        try {
+            Optional<MarcacaoPontos> mponto_existente = mponto_repo.findById(mpontos_att.getId());
+            if (mponto_existente.isPresent()) {
+                MarcacaoPontos mponto = mponto_existente.get();
+                
+                mponto.setPontos(mpontos_att.getPontos());
+                
+                mponto_repo.save(mponto);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            System.out.println("deu erro: " + e);
+            return false;
+        }
+    }    
 
-    public Optional<MarcacaoPontos> getMPontosById(Long mpontos_cod){
-        Optional<MarcacaoPontos> mpontos = mponto_repo.findByHorasCod(mpontos_cod);
-        return mpontos;
-    }
 }
