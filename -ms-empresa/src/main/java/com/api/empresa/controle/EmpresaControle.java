@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,8 @@ import com.api.empresa.entidade.Empresa;
 import com.api.empresa.repositorio.EmpresaRepositorio;
 
 @RestController
-@RequestMapping("/empresa") // Base URL para os endpoints da empresa
+@RequestMapping("/empresa")
+@CrossOrigin(origins = "*")
 public class EmpresaControle {
 
     @Autowired
@@ -36,34 +38,34 @@ public class EmpresaControle {
         return new ResponseEntity<>(savedEmpresa, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{emp_cod}")
-    public ResponseEntity<Empresa> obterEmpresaPorId(@PathVariable Long emp_cod) {
-        return repositorio.findById(emp_cod)
+    @GetMapping("/{empCod}")
+    public ResponseEntity<Empresa> obterEmpresaPorId(@PathVariable Long empCod) {
+        return repositorio.findById(empCod)
                 .map(empresa -> new ResponseEntity<>(empresa, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/{emp_cod}")
-    public ResponseEntity<Empresa> editarEmpresa(@PathVariable Long emp_cod, @RequestBody Empresa empresaAtualizada) {
-        return repositorio.findById(emp_cod)
+    @PutMapping("/{empCod}")
+    public ResponseEntity<Empresa> editarEmpresa(@PathVariable Long empCod, @RequestBody Empresa empresaAtualizada) {
+        return repositorio.findById(empCod)
                 .map(empresa -> {
-                    empresa.setEmp_nome(empresaAtualizada.getEmp_nome());
-                    empresa.setEmp_cnpj(empresaAtualizada.getEmp_cnpj());
-                    empresa.setEmp_razaoSocial(empresaAtualizada.getEmp_razaoSocial());
-                    empresa.setEmp_cep(empresaAtualizada.getEmp_cep());
-                    empresa.setEmp_cidade(empresaAtualizada.getEmp_cidade());
-                    empresa.setEmp_estado(empresaAtualizada.getEmp_estado());
-                    empresa.setEmp_endereco(empresaAtualizada.getEmp_endereco());
+                    empresa.setEmpNome(empresaAtualizada.getEmpNome());
+                    empresa.setEmpCnpj(empresaAtualizada.getEmpCnpj());
+                    empresa.setEmpRazaoSocial(empresaAtualizada.getEmpRazaoSocial());
+                    empresa.setEmpCep(empresaAtualizada.getEmpCep());
+                    empresa.setEmpCidade(empresaAtualizada.getEmpCidade());
+                    empresa.setEmpEstado(empresaAtualizada.getEmpEstado());
+                    empresa.setEmpEndereco(empresaAtualizada.getEmpEndereco());
                     Empresa updatedEmpresa = repositorio.save(empresa);
                     return new ResponseEntity<>(updatedEmpresa, HttpStatus.OK);
                 })
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/{emp_cod}")
-    public ResponseEntity<Void> deletarEmpresa(@PathVariable Long emp_cod) {
-        if (repositorio.existsById(emp_cod)) {
-            repositorio.deleteById(emp_cod);
+    @DeleteMapping("/{empCod}")
+    public ResponseEntity<Void> deletarEmpresa(@PathVariable Long empCod) {
+        if (repositorio.existsById(empCod)) {
+            repositorio.deleteById(empCod);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

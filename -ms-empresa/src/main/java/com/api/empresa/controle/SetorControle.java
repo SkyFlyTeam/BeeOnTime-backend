@@ -36,28 +36,28 @@ public class SetorControle {
         return new ResponseEntity<>(savedSetor, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{setor_cod}")
-    public ResponseEntity<Setor> obterSetorPorId(@PathVariable Long setor_cod) {
-        return repositorio.findById(setor_cod)
+    @GetMapping("/{setorCod}")
+    public ResponseEntity<Setor> obterSetorPorId(@PathVariable Long setorCod) {
+        return repositorio.findById(setorCod)
                 .map(setor -> new ResponseEntity<>(setor, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/{setor_cod}")
-    public ResponseEntity<Setor> editarSetor(@PathVariable Long setor_cod, @RequestBody Setor empresaAtualizada) {
-        return repositorio.findById(setor_cod)
+    @PutMapping("/{setorCod}")
+    public ResponseEntity<Setor> editarSetor(@PathVariable Long setorCod, @RequestBody Setor empresaAtualizada) {
+        return repositorio.findById(setorCod)
                 .map(setor -> {
-                    setor.setSetor_nome(empresaAtualizada.getSetor_nome());
+                    setor.setSetorNome(empresaAtualizada.getSetorNome());
                     Setor updatedSetor = repositorio.save(setor);
                     return new ResponseEntity<>(updatedSetor, HttpStatus.OK);
                 })
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @DeleteMapping("/{setor_cod}")
-    public ResponseEntity<Void> deletarSetor(@PathVariable Long setor_cod) {
-        if (repositorio.existsById(setor_cod)) {
-            repositorio.deleteById(setor_cod);
+    @DeleteMapping("/{setorCod}")
+    public ResponseEntity<Void> deletarSetor(@PathVariable Long setorCod) {
+        if (repositorio.existsById(setorCod)) {
+            repositorio.deleteById(setorCod);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

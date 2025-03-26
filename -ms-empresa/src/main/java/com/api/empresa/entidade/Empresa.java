@@ -11,98 +11,98 @@ public class Empresa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long emp_cod;
+    private long empCod;
 
     @Column
-    private String emp_nome;
+    private String empNome;
 
     @Column
-    private String emp_cnpj;
+    private String empCnpj;
 
     @Column
-    private String emp_razaoSocial;
+    private String empRazaoSocial;
 
     @Column
-    private String emp_cep;
+    private String empCep;
 
     @Column
-    private String emp_cidade;
+    private String empCidade;
 
     @Column
-    private String emp_estado;
+    private String empEstado;
 
     @Column
-    private String emp_endereco;
+    private String empEndereco;
 
     // Getters and Setters
 
-    public long getEmp_cod() {
-        return emp_cod;
+    public long getEmpCod() {
+        return empCod;
     }
 
-    public void setEmp_cod(long emp_cod) {
-        this.emp_cod = emp_cod;
+    public void setEmpCod(long empCod) {
+        this.empCod = empCod;
     }
 
-    public String getEmp_nome() {
-        return emp_nome;
+    public String getEmpNome() {
+        return empNome;
     }
 
-    public void setEmp_nome(String emp_nome) {
-        this.emp_nome = emp_nome;
+    public void setEmpNome(String empNome) {
+        this.empNome = empNome;
     }
 
-    public String getEmp_cnpj() {
-        return emp_cnpj;
+    public String getEmpCnpj() {
+        return empCnpj;
     }
 
-    public void setEmp_cnpj(String emp_cnpj) {
-        if (emp_cnpj == null || emp_cnpj.length() != 14) {
+    public void setEmpCnpj(String empCnpj) {
+        if (empCnpj == null || empCnpj.length() != 14) {
             throw new IllegalArgumentException("CNPJ deve ter 14 dígitos");
         }
-        this.emp_cnpj = emp_cnpj;
+        this.empCnpj = empCnpj;
     }
 
-    public String getEmp_razaoSocial() {
-        return emp_razaoSocial;
+    public String getEmpRazaoSocial() {
+        return empRazaoSocial;
     }
 
-    public void setEmp_razaoSocial(String emp_razaoSocial) {
-        this.emp_razaoSocial = emp_razaoSocial;
+    public void setEmpRazaoSocial(String empRazaoSocial) {
+        this.empRazaoSocial = empRazaoSocial;
     }
 
-    public String getEmp_cep() {
-        return emp_cep;
+    public String getEmpCep() {
+        return empCep;
     }
 
-    public void setEmp_cep(String emp_cep) {
-        if (emp_cep == null || emp_cep.length() != 8) {
+    public void setEmpCep(String empCep) {
+        if (empCep == null || empCep.length() != 8) {
             throw new IllegalArgumentException("CNPJ deve ter 14 dígitos");
         }
-        this.emp_cep = emp_cep;
+        this.empCep = empCep;
     }
 
-    public String getEmp_cidade() {
-        return emp_cidade;
+    public String getEmpCidade() {
+        return empCidade;
     }
 
-    public void setEmp_cidade(String emp_cidade) {
-        this.emp_cidade = emp_cidade;
+    public void setEmpCidade(String empCidade) {
+        this.empCidade = empCidade;
     }
 
-    public String getEmp_estado() {
-        return emp_estado;
+    public String getEmpEstado() {
+        return empEstado;
     }
 
-    public void setEmp_estado(String emp_estado) {
-        this.emp_estado = emp_estado;
+    public void setEmpEstado(String empEstado) {
+        this.empEstado = empEstado;
     }
 
-    public String getEmp_endereco() {
-        return emp_endereco;
+    public String getEmpEndereco() {
+        return empEndereco;
     }
 
-    public void setEmp_endereco(String emp_endereco) {
-        this.emp_endereco = emp_endereco;
+    public void setEmpEndereco(String empEndereco) {
+        this.empEndereco = empEndereco;
     }
 }

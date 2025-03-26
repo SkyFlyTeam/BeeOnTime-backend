@@ -11,26 +11,26 @@ public class Setor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long setor_cod;
+    private long setorCod;
 
     @Column
-    private String setor_nome;
+    private String setorNome;
 
     // Getters and Setters
 
-    public long getSetor_cod() {
-        return setor_cod;
+    public long getSetorCod() {
+        return setorCod;
     }
 
-    public void setSetor_cod(long setor_cod) {
-        this.setor_cod = setor_cod;
+    public void setSetorCod(long setorCod) {
+        this.setorCod = setorCod;
     }
 
-    public String getSetor_nome() {
-        return setor_nome;
+    public String getSetorNome() {
+        return setorNome;
     }
 
-    public void setSetor_nome(String setor_nome) {
-        this.setor_nome = setor_nome;
+    public void setSetorNome(String setorNome) {
+        this.setorNome = setorNome;
     }
 }
