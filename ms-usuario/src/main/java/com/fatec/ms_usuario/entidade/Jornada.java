@@ -36,6 +36,10 @@ public class Jornada {
 	@Column
 	private Time jornada_horarioSaida;
 	
+	@Column
+	private Time jornada_horarioAlmoco;
+	
+	
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "usuario_cod", referencedColumnName = "usuario_cod", insertable = false, updatable = false)
@@ -102,4 +106,12 @@ public class Jornada {
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
+    
+    public Time getJornada_horarioAlmoco() {
+		return jornada_horarioAlmoco;
+	}
+
+	public void setJornada_horarioAlmoco(Time jornada_horarioAlmoco) {
+		this.jornada_horarioAlmoco = jornada_horarioAlmoco;
+	}
 }

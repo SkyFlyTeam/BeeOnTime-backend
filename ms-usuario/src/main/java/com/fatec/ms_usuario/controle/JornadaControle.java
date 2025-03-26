@@ -85,6 +85,7 @@ public class JornadaControle {
 		alvo.setJornada_diasSemana(jornada.getJornada_diasSemana());
 		alvo.setJornada_horarioEntrada(jornada.getJornada_horarioEntrada());
 		alvo.setJornada_horarioSaida(jornada.getJornada_horarioSaida());
+		alvo.setJornada_horarioAlmoco(jornada.getJornada_horarioAlmoco());
 		
 		repositorio.save(alvo);
 		return ResponseEntity.ok("Jornada atualizada com sucesso");
