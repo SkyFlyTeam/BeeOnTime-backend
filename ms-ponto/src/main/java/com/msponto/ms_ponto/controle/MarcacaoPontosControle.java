@@ -2,6 +2,7 @@ package com.msponto.ms_ponto.controle;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,12 +34,21 @@ public class MarcacaoPontosControle {
         return pontos;
     }
 
-    @GetMapping("/usuario/{usuario_cod}/periodo")
+    @PostMapping("/usuario/{usuario_cod}/periodo")
     public List<MarcacaoPontos> getPontosUsuarioByPeriod(@PathVariable Long usuario_cod, @RequestBody PeriodoDTO periodo) {
         LocalDate startDate = periodo.getStartDateAsDate();
         LocalDate endDate = periodo.getEndDateAsDate();
         List<MarcacaoPontos> pontos = mponto_servico.getPontosUsuarioByPeriod(usuario_cod, startDate, endDate);
         return pontos;
+    }
+
+    @GetMapping("/porHorasCod/{horas_cod}")
+    public ResponseEntity<?> getPontosByHorasCod(@PathVariable Long horas_cod) {
+        Optional<MarcacaoPontos> pontos = mponto_servico.getPontosUsuarioByCodHoras(horas_cod);
+        if(!pontos.isPresent()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Falha ao cadastrar horas.");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(pontos.get());
     }
 
     @PostMapping("/baterPonto")

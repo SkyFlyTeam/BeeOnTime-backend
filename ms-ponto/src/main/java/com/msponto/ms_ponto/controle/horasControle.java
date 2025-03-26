@@ -37,8 +37,8 @@ public class horasControle {
 
     // Retorna as horas de um usuário em determinado dia
     @PostMapping("/usuario/{usuario_cod}/dia")
-    public ResponseEntity<List<Horas>>  getUsuarioHorasDate(@PathVariable Long usuario_cod, @RequestBody LocalDate date) {
-        List<Horas> usuario_horas = horas_servico.getUsuarioHorasByDate(usuario_cod, date);
+    public ResponseEntity<List<Horas>>  getUsuarioHorasDate(@PathVariable Long usuario_cod, @RequestBody LocalDate data) {
+        List<Horas> usuario_horas = horas_servico.getUsuarioHorasByDate(usuario_cod, data);
         return ResponseEntity.status(HttpStatus.OK).body(usuario_horas);
     }
 

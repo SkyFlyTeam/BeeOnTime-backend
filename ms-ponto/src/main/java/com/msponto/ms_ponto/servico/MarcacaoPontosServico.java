@@ -30,8 +30,8 @@ public class MarcacaoPontosServico {
         return mpontos;
     }
 
-    public MarcacaoPontos getPontosUsuarioByCodHoras(Long usuario_cod, Long horas_cod){
-        MarcacaoPontos mpontos = mponto_repo.findByUsuarioCodAndHorasCod(usuario_cod, horas_cod);
+    public Optional<MarcacaoPontos> getPontosUsuarioByCodHoras(Long horasCod){
+        Optional<MarcacaoPontos> mpontos = mponto_repo.findByHorasCod(horasCod);
         return mpontos;
     }
 
