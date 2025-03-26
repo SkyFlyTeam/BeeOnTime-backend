@@ -13,11 +13,13 @@ public class Funcionario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long func_id;
 
-    @Column
-    private String func_email;
+    @Column(name = "func_email")
+    private String funcEmail;
 
-    @Column
-    private String func_senha;
+    @Column(name = "func_senha")
+    private String funcSenha;
+
+
 
     //Getters and setters
 
@@ -29,20 +31,20 @@ public class Funcionario {
 		this.func_id = func_id;
 	}
 
-	public String getFunc_email() {
-		return func_email;
+	public String getFuncEmail() {
+		return funcEmail;
 	}
 
-	public void setFunc_email(String func_email) {
-		this.func_email = func_email;
+	public void setFuncEmail(String func_email) {
+		this.funcEmail = func_email;
 	}
 
-	public String getFunc_senha() {
-		return func_senha;
+	public String getFuncSenha() {
+		return funcSenha;
 	}
 
-	public void setFunc_senha(String func_senha) {
-		this.func_senha = func_senha;
+	public void setFuncSenha(String func_senha) {
+		this.funcSenha = func_senha;
 	}
 
 }
