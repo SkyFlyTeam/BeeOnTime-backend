@@ -87,6 +87,12 @@ public class UsuarioControle {
 
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizarUsuario(@RequestBody Usuario usuario) {
+        if (usuario == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (usuario.getNivelAcesso_cod() == null || usuario.getUsuario_email() == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
         Optional<Usuario> usuarioOptional = repositorio.findById(usuario.getUsuario_cod());
 
         if (usuarioOptional.isEmpty()) {
@@ -106,7 +112,7 @@ public class UsuarioControle {
         alvo.setUsuario_DataNascimento(usuario.getUsuario_DataNascimento());
         //
         alvo.setNivelAcesso(
-                nivelAcessoRepositorio.findById(usuario.getNivelAcesso().getNivelAcesso_cod()).get());
+                nivelAcessoRepositorio.findById(usuario.getNivelAcesso_cod()).get());
 
         repositorio.save(alvo);
         return ResponseEntity.ok("Usuário atualizado com sucesso.\n" + alvo.getNivelAcesso());
