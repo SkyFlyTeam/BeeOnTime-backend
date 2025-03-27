@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos;
+import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos.Ponto;
 import com.msponto.ms_ponto.entidade.mysql.Horas;
 import com.msponto.ms_ponto.repositorio.mongo.MarcacaoPontosRepositorio;
 
@@ -49,7 +50,20 @@ public class MarcacaoPontosServico {
                     mponto_repo.save(mponto_existe);
 
                     // Atualizando a quantidade de horas 
-                    
+                    List<Ponto> pontos = mponto_existe.getPontos();
+        
+                    if (pontos.size() <= 1) {
+                        System.out.println("Não há pontos o suficiente para calcular as horas");
+                    }
+
+                    Boolean horas_atualizadas = horas_servico.calculatingHours(mponto_existe);
+
+                    if(!horas_atualizadas){
+                        System.err.println("Erro ao tentar atualizar as horas");
+                        return false;
+                    }
+
+                    return true;
                 }else{
                     mponto.setData(LocalDate.now());
                     mponto_repo.save(mponto);

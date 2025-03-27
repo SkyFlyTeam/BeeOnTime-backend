@@ -15,4 +15,6 @@ public interface HorasRepositorio extends JpaRepository<Horas, Long>{
     List<Horas> findByUsuarioCodAndHorasDataBetween(Long usuarioCod, LocalDate starDate, LocalDate enDate);
 
     Horas findByHorasData(LocalDate horasData);
+
+    Horas findByHorasCod(Long horasCod);
 }

@@ -1,5 +1,6 @@
 package com.msponto.ms_ponto.servico;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.msponto.ms_ponto.dto.UsuarioDTO;
 import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos;
+import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos.Ponto;
 import com.msponto.ms_ponto.entidade.mysql.Horas;
+import com.msponto.ms_ponto.enums.TipoPonto;
 import com.msponto.ms_ponto.modelo.HorasAtualizador;
 import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 import com.msponto.ms_ponto.repositorio.mysql.HorasRepositorio;
@@ -89,27 +92,53 @@ public class HorasServico {
         }
     }
 
-//     public Horas calculatingHours(MarcacaoPontos mPontos){
-//         try {
-//            // Pegando carga hóraria do usuário
-//            Long usuario_cod = mPontos.getUsuarioCod();
-//            UsuarioDTO usuario =  usuarioClient.getUsuarioByCod(usuario_cod);
-//            Integer usuario_carga = usuario.getUsuario_cargaHoraria();
+    public Boolean calculatingHours(MarcacaoPontos mPontos){
+        try {
+           // Buscando ponto de entrada
+           List<Ponto> pontos = mPontos.getPontos();
+           Optional<Ponto> entrada_existe = pontos.stream()
+            .filter(ponto -> TipoPonto.ENTRADA.equals(ponto.getTipoPonto()))
+            .findFirst();
 
-//            mPontos.getPontos().
-//            });
-//            if (horas_existente.isPresent()) {
-//                Horas horas = horas_existente.get();
+           if (entrada_existe.isPresent()) {
+                // Pegando carga hóraria do usuário
+                Long usuario_cod = mPontos.getUsuarioCod();
+                UsuarioDTO usuario =  usuarioClient.getUsuarioByCod(usuario_cod);
+                Integer usuario_carga = usuario.getUsuario_cargaHoraria();
+
+                // Pegando o registro de horas
+                Horas horas = horas_repo.findByHorasCod(mPontos.getHorasCod());
+
+                // Pegando ponto de entrada e o último registrado
+                Ponto entrada = entrada_existe.get();
+                Ponto ultimo_ponto = pontos.get(pontos.size() - 1);
                
-//                HorasAtualizador atualizador = new HorasAtualizador();
-//                atualizador.atualizarDados(horas_att, horas);
+                // Calculando tempo decorrido
+                Duration tempo_decorrido = Duration.between(entrada.getHorarioPonto(), ultimo_ponto.getHorarioPonto());
 
-//                return true;
-//            }
-//            return false;
-//        } catch (Exception e) {
-//            System.out.println("deu erro: " + e);
-//            return false;
-//        }
-//    }
+                // Se ainda não for hora extra
+                if(tempo_decorrido.toHours() <= usuario_carga){
+                    Float horas_faltantes = (float) usuario_carga - (float) tempo_decorrido.toMinutes() / 60.0f;
+    
+                    Float horas_trabalhadas = (float) tempo_decorrido.toMinutes() / 60.0f;
+
+                    horas.setHorasFaltantes(horas_faltantes);
+                    horas.setHorasTrabalhadas(horas_trabalhadas);
+                }else{ // Se for hora extra
+                    Float horas_extras = (float) tempo_decorrido.toMinutes() / 60.0f - (float) usuario_carga;
+
+                    horas.setHorasFaltantes(0.0f);
+                    horas.setHorasTrabalhadas((float) usuario_carga);
+                    horas.setHorasExtras(horas_extras);
+                }
+
+                horas_repo.save(horas); 
+                return true;
+           }
+           return false;
+       } catch (Exception e) {
+           System.out.println("deu erro: " + e);
+           return false;
+       }
+   }
 }
