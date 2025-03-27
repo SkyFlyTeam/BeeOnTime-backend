@@ -19,7 +19,11 @@ public class Funcionario {
     @Column(name = "func_senha")
     private String funcSenha;
 
-
+	//
+	//
+	//
+	@Column(name = "func_acesso")
+	private long funcAcesso;
 
     //Getters and setters
 
@@ -47,4 +51,15 @@ public class Funcionario {
 		this.funcSenha = func_senha;
 	}
 
+
+	//
+	//
+	//
+	public long getFuncAcesso() {
+		return funcAcesso;
+	}
+
+	public void setFunc_acesso(long func_acesso) {
+		this.funcAcesso = func_acesso;
+	}
 }

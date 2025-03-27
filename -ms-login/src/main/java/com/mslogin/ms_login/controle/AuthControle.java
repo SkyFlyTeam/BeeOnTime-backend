@@ -1,6 +1,7 @@
 package com.mslogin.ms_login.controle;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -33,5 +34,19 @@ public class AuthControle {
         } else {
             return ResponseEntity.status(401).body("Credenciais inválidas");
         }
+    }
+
+    //
+    //
+    //
+    @GetMapping("/{email}")
+    public ResponseEntity<?> verificarAcesso(@PathVariable String email) {
+        Optional<Funcionario> funcionarioEncontrado = funcionarioControle.obterFuncionarioEmail(email);
+        
+        if(!funcionarioEncontrado.isPresent())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        long acesso = funcionarioEncontrado.get().getFuncAcesso();
+        return new ResponseEntity<>(acesso, HttpStatus.OK);
     }
 }
