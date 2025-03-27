@@ -56,9 +56,14 @@ public class NivelAcessoControle {
 
     @PutMapping
     public ResponseEntity<?> atualizarNivelAcesso(@RequestBody NivelAcesso nivelAcessoNovo) {
-        Optional<NivelAcesso> nivelAcessoOptional = repositorio.findById(nivelAcessoNovo.getNivelAcesso_cod());
-       
-        NivelAcesso nivelAcesso = nivelAcessoOptional.get();
+        if(nivelAcessoNovo.getNivelAcesso_nome() == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        
+        NivelAcesso nivelAcesso = repositorio.findById(nivelAcessoNovo.getNivelAcesso_cod()).orElse(null);
+        
+        if(nivelAcesso == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         nivelAcesso.setNivelAcesso_nome(nivelAcessoNovo.getNivelAcesso_nome());
 
         repositorio.save(nivelAcesso);

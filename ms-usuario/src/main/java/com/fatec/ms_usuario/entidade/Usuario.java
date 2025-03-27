@@ -11,6 +11,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
 
@@ -56,6 +58,10 @@ public class Usuario {
 	
 	@OneToMany(mappedBy = "usuario")
 	private List<Jornada> jornadas;
+
+	@ManyToOne
+	@JoinColumn(name = "nivelacesso_cod", referencedColumnName = "nivelacesso_cod", insertable = false, updatable = false)
+	private NivelAcesso nivelAcesso;
 
 	public Long getUsuario_cod() {
 		return usuario_cod;
@@ -149,4 +155,14 @@ public class Usuario {
 		this.usuario_cargo = usuario_cargo;
 	}
 
+	//
+	//
+	//
+	public NivelAcesso getNivelAcesso(){
+		return nivelAcesso;
+	}
+
+	public void setNivelAcesso(NivelAcesso nivelAcesso){
+		this.nivelAcesso = nivelAcesso;
+	}
 }

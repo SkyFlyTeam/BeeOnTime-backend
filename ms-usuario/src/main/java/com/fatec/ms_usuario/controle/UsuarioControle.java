@@ -83,6 +83,8 @@ public class UsuarioControle {
         alvo.setUsuario_senha(usuario.getUsuario_senha());
         alvo.setUsuario_email(usuario.getUsuario_email());
         alvo.setUsuario_DataNascimento(usuario.getUsuario_DataNascimento());
+        //
+        alvo.setNivelAcesso(usuario.getNivelAcesso());
 
         repositorio.save(alvo);
         return ResponseEntity.ok("Usuário atualizado com sucesso.");

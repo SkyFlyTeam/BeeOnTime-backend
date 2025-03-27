@@ -11,9 +11,9 @@ import jakarta.persistence.Id;
 public class NivelAcesso {
     @Id
 	@Column(name = "nivelacesso_cod")
-	private int nivelAcesso_cod;
+	private long nivelAcesso_cod;
 	
-	@Column(name = "nivelacesso_nome", length=50)
+	@Column(name = "nivelacesso_nome")
 	private String nivelAcesso_nome;   
 
 	public long getNivelAcesso_cod() {
