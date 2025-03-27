@@ -8,10 +8,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Entity
@@ -56,6 +60,12 @@ public class Usuario {
 	
 	@OneToMany(mappedBy = "usuario")
 	private List<Jornada> jornadas;
+
+	@ManyToOne
+	@JoinColumn(name = "nivelacesso_cod", referencedColumnName = "nivelacesso_cod", insertable = false, updatable = false)
+	private NivelAcesso nivelAcesso;
+	@Column(name = "nivelacesso_cod")
+	private Long nivelAcesso_cod;
 
 	public Long getUsuario_cod() {
 		return usuario_cod;
@@ -149,4 +159,20 @@ public class Usuario {
 		this.usuario_cargo = usuario_cargo;
 	}
 
+	//
+	//
+	//
+	public NivelAcesso getNivelAcesso(){
+		return nivelAcesso;
+	}
+	public void setNivelAcesso(NivelAcesso nivelAcesso){
+		this.nivelAcesso = nivelAcesso;
+	}
+/*
+	public Long getNivelAcesso_cod() {
+		return nivelAcesso_cod;
+	}
+	public void setNivelAcesso_cod(Long nivelAcesso_cod){
+		this.nivelAcesso_cod = nivelAcesso_cod;
+	}*/
 }
