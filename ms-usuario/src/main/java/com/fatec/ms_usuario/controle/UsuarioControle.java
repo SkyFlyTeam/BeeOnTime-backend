@@ -1,5 +1,6 @@
 package com.fatec.ms_usuario.controle;
 
+import java.lang.foreign.Linker.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.ms_usuario.entidade.Jornada;
+import com.fatec.ms_usuario.entidade.NivelAcesso;
 import com.fatec.ms_usuario.entidade.Usuario;
 import com.fatec.ms_usuario.repositorio.JornadaRepositorio;
+import com.fatec.ms_usuario.repositorio.NivelAcessoRepositorio;
 import com.fatec.ms_usuario.repositorio.UsuarioRepositorio;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,41 +32,59 @@ public class UsuarioControle {
 
     @Autowired
     private UsuarioRepositorio repositorio;
-    
+
     @Autowired
     private JornadaRepositorio jornadaRepositorio;
 
+    @Autowired
+    private NivelAcessoRepositorio nivelAcessoRepositorio;
+
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> obterUsuarios() {
-		List<Usuario> usuarios = repositorio.findAll();
-		return new ResponseEntity<>(usuarios, HttpStatus.OK);
-	}
-
+        List<Usuario> usuarios = repositorio.findAll();
+        return new ResponseEntity<>(usuarios, HttpStatus.OK);
+    }
 
     @PostMapping("/cadastrar")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody Usuario novo) {
+        
         HttpStatus status = HttpStatus.BAD_REQUEST;
         if (novo != null) {
-            repositorio.save(novo);
-            status = HttpStatus.OK;
+        
+        repositorio.save(novo);
+        status = HttpStatus.OK;
         }
-        return new ResponseEntity<>(status);
+        return new ResponseEntity<>(novo, status);
+         
+        //
+        // Trocar quando integrar
+        /*
+        if (novo == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (novo.getNivelAcesso_cod() == null || novo.getUsuario_email() == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        NivelAcesso acesso = nivelAcessoRepositorio.findById(novo.getNivelAcesso_cod()).orElse(null);
+        if(acesso == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        novo.setNivelAcesso(acesso);
+        repositorio.save(novo);
+        return new ResponseEntity<>(HttpStatus.OK);
+        */
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> obterUsuarioId(@PathVariable Long id) {
-    	Usuario usuario = repositorio.findById(id).orElse(null);
-		
-  		if (usuario == null) {
-  			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-  		} else {
-  			return new ResponseEntity<>(usuario, HttpStatus.OK);
-  		}
+        Usuario usuario = repositorio.findById(id).orElse(null);
+
+        if (usuario == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
+        }
     }
-    
-    
+
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizarUsuario(@RequestBody Usuario usuario) {
         Optional<Usuario> usuarioOptional = repositorio.findById(usuario.getUsuario_cod());
@@ -84,15 +105,13 @@ public class UsuarioControle {
         alvo.setUsuario_email(usuario.getUsuario_email());
         alvo.setUsuario_DataNascimento(usuario.getUsuario_DataNascimento());
         //
-        alvo.setNivelAcesso(usuario.getNivelAcesso());
+        alvo.setNivelAcesso(
+                nivelAcessoRepositorio.findById(usuario.getNivelAcesso().getNivelAcesso_cod()).get());
 
         repositorio.save(alvo);
-        return ResponseEntity.ok("Usuário atualizado com sucesso.");
+        return ResponseEntity.ok("Usuário atualizado com sucesso.\n" + alvo.getNivelAcesso());
     }
 
-
-    
-    
     @DeleteMapping("/excluir")
     public ResponseEntity<?> deletarUsuario(@RequestBody Usuario exclusao) {
         Optional<Usuario> usuarioOptional = repositorio.findById(exclusao.getUsuario_cod());
