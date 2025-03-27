@@ -13,7 +13,7 @@ public class NivelAcesso {
 	@Column(name = "nivelacesso_cod")
 	private long nivelAcesso_cod;
 	
-	@Column(name = "nivelacesso_nome")
+	@Column(name = "nivelacesso_nome", length=50)
 	private String nivelAcesso_nome;   
 
 	public long getNivelAcesso_cod() {
