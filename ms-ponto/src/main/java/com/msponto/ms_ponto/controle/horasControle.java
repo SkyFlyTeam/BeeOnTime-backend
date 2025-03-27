@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.msponto.ms_ponto.dto.PeriodoDTO;
@@ -43,8 +44,9 @@ public class horasControle {
 
     // Retorna as horas de um usuário em determinado dia
     @PostMapping("/usuario/{usuario_cod}/dia")
-    public ResponseEntity<Horas> getUsuarioHorasDate(@PathVariable Long usuario_cod, @RequestBody LocalDate data) {
-        Horas usuario_horas = horas_servico.getUsuarioHorasByDate(usuario_cod, data);
+    public ResponseEntity<Horas> getUsuarioHorasDate(@PathVariable Long usuario_cod, @RequestParam("data") String data) {
+        LocalDate converted_data = LocalDate.parse(data);
+        Horas usuario_horas = horas_servico.getUsuarioHorasByDate(usuario_cod, converted_data);
         return ResponseEntity.status(HttpStatus.OK).body(usuario_horas);
     }
 
