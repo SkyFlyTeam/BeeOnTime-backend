@@ -2,7 +2,6 @@ package com.msponto.ms_ponto.controle;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +27,13 @@ public class horasControle {
     @Autowired
     private HorasServico horas_servico;
 
+    // Retorna todas as horas cadastradas
+    @GetMapping("/")
+    public ResponseEntity<List<Horas>> getAllHoras() {
+        List<Horas> usuario_horas = horas_servico.getAllHoras();
+        return ResponseEntity.status(HttpStatus.OK).body(usuario_horas);
+    }
+
     // Retorna todas as horas de um usuário
     @GetMapping("/usuario/{usuario_cod}")
     public ResponseEntity<List<Horas>>  getUsuarioHoras(@PathVariable Long usuario_cod) {
@@ -37,16 +43,23 @@ public class horasControle {
 
     // Retorna as horas de um usuário em determinado dia
     @PostMapping("/usuario/{usuario_cod}/dia")
-    public ResponseEntity<List<Horas>>  getUsuarioHorasDate(@PathVariable Long usuario_cod, @RequestBody LocalDate data) {
-        List<Horas> usuario_horas = horas_servico.getUsuarioHorasByDate(usuario_cod, data);
+    public ResponseEntity<Horas> getUsuarioHorasDate(@PathVariable Long usuario_cod, @RequestBody LocalDate data) {
+        Horas usuario_horas = horas_servico.getUsuarioHorasByDate(usuario_cod, data);
         return ResponseEntity.status(HttpStatus.OK).body(usuario_horas);
+    }
+
+    // Retorna todas as horas de um determinado dia
+    @PostMapping("/dia")
+    public ResponseEntity<List<Horas>> getHorasDate(@RequestBody LocalDate data) {
+        List<Horas> horas = horas_servico.getAllHorasByDate(data);
+        return ResponseEntity.status(HttpStatus.OK).body(horas);
     }
 
     // Retorna as horas de um usuário em determinado periodo
     @PostMapping("/usuario/{usuario_cod}/periodo")
     public ResponseEntity<List<Horas>>  getUsuarioHorasByPeriod(@PathVariable Long usuario_cod, @RequestBody PeriodoDTO periodo) {
-        LocalDate startDate = periodo.getStartDateAsDate();
-        LocalDate endDate = periodo.getEndDateAsDate();
+        LocalDate startDate = periodo.getDataFimAsDate();
+        LocalDate endDate = periodo.getDataInicioAsDate();
         List<Horas> usuario_horas = horas_servico.getUsuarioHorasByPeriod(usuario_cod, startDate, endDate);
         return ResponseEntity.status(HttpStatus.OK).body(usuario_horas);
     }

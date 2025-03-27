@@ -1,7 +1,6 @@
 package com.msponto.ms_ponto.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

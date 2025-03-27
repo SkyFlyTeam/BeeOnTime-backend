@@ -21,6 +21,9 @@ public class MPontoProvisorioServico {
     @Autowired
     private MarcacaoPontosServico mponto_servico;
 
+    @Autowired
+    private HorasServico horas_servico;
+
     public MPontoProvisorio getMpontoProvBySolicitacaoCod(Long solicitacao_cod) {
         MPontoProvisorio pontos = mpontoprov_repo.findBySolicitacaoCod(solicitacao_cod);
         return pontos;
@@ -56,9 +59,14 @@ public class MPontoProvisorioServico {
                         }
 
                         Boolean att_sucessful = mponto_servico.updateMponto(mponto);
-
                         if(!att_sucessful){
                             System.err.println("Erro ao atualizar o ponto solicitado");
+                            return false;
+                        }
+
+                        Boolean att_horas = horas_servico.calculatingHours(mponto);
+                        if(!att_horas){
+                            System.err.println("Erro ao atualizar as horas depois do ajuste do ponto");
                             return false;
                         }
                     }else{
@@ -74,7 +82,7 @@ public class MPontoProvisorioServico {
             System.err.println("Ponto provisório não encontrado");
             return false;
         } catch (Exception e) {
-            System.out.println("deu erro: " + e);
+            System.err.println("[ERRO]: " + e);
             return false;
         }
     }    

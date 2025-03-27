@@ -53,13 +53,14 @@ public class MarcacaoPontosServico {
                     List<Ponto> pontos = mponto_existe.getPontos();
         
                     if (pontos.size() <= 1) {
-                        System.out.println("Não há pontos o suficiente para calcular as horas");
+                        System.out.println("[ERRO]: Não há pontos o suficiente para calcular as horas");
+                        return true;
                     }
 
                     Boolean horas_atualizadas = horas_servico.calculatingHours(mponto_existe);
 
                     if(!horas_atualizadas){
-                        System.err.println("Erro ao tentar atualizar as horas");
+                        System.err.println("[ERRO]: Falha ao tentar atualizar as horas");
                         return false;
                     }
 
@@ -72,7 +73,7 @@ public class MarcacaoPontosServico {
             } 
             return false;
         } catch (Exception e) {
-            System.out.println("deu erro" + e);
+            System.err.println("[ERRO]: " + e);
             return false;
         }
     }
@@ -90,7 +91,7 @@ public class MarcacaoPontosServico {
             }
             return false;
         } catch (Exception e) {
-            System.out.println("deu erro: " + e);
+            System.err.println("[ERRO]: " + e);
             return false;
         }
     }    

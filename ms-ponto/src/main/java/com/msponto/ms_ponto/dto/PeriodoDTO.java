@@ -3,27 +3,27 @@ package com.msponto.ms_ponto.dto;
 import java.time.LocalDate;
 
 public class PeriodoDTO {
-    private String startDate;
-    private String endDate;
+    private String dataInicio;
+    private String dataFim;
 
-    public String getStartDate() {
-        return startDate;
+    public String getDataInicio() {
+        return dataInicio;
     }
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setaDataInicio(String dataInicio) {
+        this.dataInicio = dataInicio;
     }
-    public String getEndDate() {
-        return endDate;
+    public String getDataFim() {
+        return dataFim;
     }
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
+    public void setDataFim(String dataFim) {
+        this.dataFim = dataFim;
     } 
 
-    public LocalDate getStartDateAsDate() {
-        return LocalDate.parse(this.startDate);
+    public LocalDate getDataInicioAsDate() {
+        return LocalDate.parse(this.dataInicio);
     }
 
-    public LocalDate getEndDateAsDate() {
-        return LocalDate.parse(this.endDate);
+    public LocalDate getDataFimAsDate() {
+        return LocalDate.parse(this.dataFim);
     }
 }

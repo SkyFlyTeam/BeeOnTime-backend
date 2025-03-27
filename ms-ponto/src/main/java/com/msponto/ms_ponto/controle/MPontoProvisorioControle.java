@@ -21,13 +21,14 @@ public class MPontoProvisorioControle {
     @Autowired
     MPontoProvisorioServico mpontoprov_servico;
 
-
+    // Visualizar todos os pontos de uma certa solitação
     @GetMapping("/solicitacao/{solicitacao_cod}")
     public MPontoProvisorio getSolicitacaoPontos(@PathVariable Long solicitacao_cod) {
         MPontoProvisorio pontos = mpontoprov_servico.getMpontoProvBySolicitacaoCod(solicitacao_cod);
         return pontos;
     }
 
+    // Cadastrar nova marcação de pontos provisórios
     @PostMapping("/cadastrar")
     public ResponseEntity<String> createMPontoProv(@RequestBody MPontoProvisorio mpontoprov) {
 
@@ -40,6 +41,7 @@ public class MPontoProvisorioControle {
         return ResponseEntity.status(HttpStatus.OK).body("Ponto provisórios cadastrados com sucesso!");
     }
     
+    // Aprovar ou recusar solicitação
     @PostMapping("/decisao/{decisao}")
     public ResponseEntity<String> makeSolicitacaoAction(@PathVariable Integer decisao, @RequestBody MPontoProvisorio mpontoprov) {
 

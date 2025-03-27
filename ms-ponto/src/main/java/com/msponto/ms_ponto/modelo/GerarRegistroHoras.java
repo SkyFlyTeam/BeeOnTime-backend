@@ -24,10 +24,10 @@ public class GerarRegistroHoras {
     @Autowired
     private HorasServico horas_servico;
 
-    @PostConstruct
-    public void runJobOnStartup() { // Rodar o job de verificação de usuários ao iniciar a aplicação
-        verificarDiaTrabalhadoDosUsuarios();  
-    }
+    // @PostConstruct
+    // public void runJobOnStartup() { // Rodar o job de verificação de usuários ao iniciar a aplicação
+    //     verificarDiaTrabalhadoDosUsuarios();  
+    // }
 
     // Job Cron para rodar uma vez por dia, à meia-noite
     @Scheduled(cron = "0 0 0 * * ?") // Execução diária às 00:00
@@ -44,7 +44,6 @@ public class GerarRegistroHoras {
             Boolean dia_trabalhado = verificador.verificar(usuario, dataAtual);
             
             if(dia_trabalhado){
-                System.out.println("USUARIO TRABALHA HOJE, CRIANDO TABELA VAZIA" + usuario.getUsuario_cod());
                 horas_servico.createEmptyHoras(usuario.getUsuario_cod(), dataAtual);
             }
         }

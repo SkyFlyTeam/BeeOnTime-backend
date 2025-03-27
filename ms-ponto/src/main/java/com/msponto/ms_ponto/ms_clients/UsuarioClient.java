@@ -2,7 +2,6 @@ package com.msponto.ms_ponto.ms_clients;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -12,7 +11,6 @@ import com.msponto.ms_ponto.dto.UsuarioDTO;
 public class UsuarioClient {
     private final WebClient.Builder webUsuarioBuilder;
 
-    @Autowired
     public UsuarioClient(WebClient.Builder webUsuarioBuilder) {
         this.webUsuarioBuilder = webUsuarioBuilder;
     }

@@ -9,12 +9,9 @@ import com.msponto.ms_ponto.entidade.mysql.Horas;
 
 public interface HorasRepositorio extends JpaRepository<Horas, Long>{
     List<Horas> findByUsuarioCod(Long usuarioCod);
-
     List<Horas> findByUsuarioCodAndHorasData(Long usuarioCod, LocalDate horasData);
-
+    List<Horas> findAllByHorasData(LocalDate horasData);
     List<Horas> findByUsuarioCodAndHorasDataBetween(Long usuarioCod, LocalDate starDate, LocalDate enDate);
-
     Horas findByHorasData(LocalDate horasData);
-
     Horas findByHorasCod(Long horasCod);
 }

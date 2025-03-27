@@ -25,13 +25,23 @@ public class HorasServico {
     @Autowired
     private UsuarioClient usuarioClient;
 
+    public List<Horas> getAllHoras(){
+        List<Horas> usuario_horas = horas_repo.findAll();
+        return usuario_horas;
+    }
+
     public List<Horas> getUsuarioHoras(Long usuario_cod){
         List<Horas> usuario_horas = horas_repo.findByUsuarioCod(usuario_cod);
         return usuario_horas;
     }
     
-    public List<Horas> getUsuarioHorasByDate(Long usuario_cod, LocalDate horas_data){
+    public Horas getUsuarioHorasByDate(Long usuario_cod, LocalDate horas_data){
         List<Horas> usuario_horas = horas_repo.findByUsuarioCodAndHorasData(usuario_cod, horas_data);
+        return usuario_horas.get(0);
+    }
+
+    public List<Horas> getAllHorasByDate(LocalDate horas_data){
+        List<Horas> usuario_horas = horas_repo.findAllByHorasData(horas_data);
         return usuario_horas;
     }
 
@@ -40,7 +50,7 @@ public class HorasServico {
         return usuario_horas;
     }
 
-    public Horas getHorasCodByDate(LocalDate date){
+    public Horas getHorasByDate(LocalDate date){
         Horas horas = horas_repo.findByHorasData(date);
         return horas;
     }
@@ -87,7 +97,7 @@ public class HorasServico {
             }
             return false;
         } catch (Exception e) {
-            System.out.println("deu erro: " + e);
+            System.err.println("[ERRO]: " + e);
             return false;
         }
     }
@@ -137,7 +147,7 @@ public class HorasServico {
            }
            return false;
        } catch (Exception e) {
-           System.out.println("deu erro: " + e);
+            System.err.println("[ERRO]: " + e);
            return false;
        }
    }

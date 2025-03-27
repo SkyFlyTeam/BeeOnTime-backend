@@ -27,21 +27,23 @@ public class MarcacaoPontosControle {
     @Autowired
     MarcacaoPontosServico mponto_servico;
 
-
+    // Recuperar todos os pontos de um usuário pelo código
     @GetMapping("/usuario/{usuario_cod}")
     public List<MarcacaoPontos> getPontosUsuario(@PathVariable Long usuario_cod) {
         List<MarcacaoPontos> pontos = mponto_servico.getPontosUsuario(usuario_cod);
         return pontos;
     }
 
+    // Recuperar todos os pontos dentro de um certo período
     @PostMapping("/usuario/{usuario_cod}/periodo")
     public List<MarcacaoPontos> getPontosUsuarioByPeriod(@PathVariable Long usuario_cod, @RequestBody PeriodoDTO periodo) {
-        LocalDate startDate = periodo.getStartDateAsDate();
-        LocalDate endDate = periodo.getEndDateAsDate();
+        LocalDate startDate = periodo.getDataInicioAsDate();
+        LocalDate endDate = periodo.getDataFimAsDate();
         List<MarcacaoPontos> pontos = mponto_servico.getPontosUsuarioByPeriod(usuario_cod, startDate, endDate);
         return pontos;
     }
 
+    // Recupera a marcação de hora dado um horas código
     @GetMapping("/porHorasCod/{horas_cod}")
     public ResponseEntity<?> getPontosByHorasCod(@PathVariable Long horas_cod) {
         Optional<MarcacaoPontos> pontos = mponto_servico.getPontosUsuarioByCodHoras(horas_cod);
@@ -51,10 +53,9 @@ public class MarcacaoPontosControle {
         return ResponseEntity.status(HttpStatus.OK).body(pontos.get());
     }
 
+    // Realiza o cadastro de um novo ponto adicionando a uma marcaoção já existente ou criando nova
     @PostMapping("/baterPonto")
     public ResponseEntity<String> createPonto(@RequestBody MarcacaoPontos marcacaoPonto) {
-        
-        // Adicionar lógica com o microsserviço para buscar o usuário e verificar se existe mesmo
 
         Boolean ponto_sucessful = mponto_servico.baterPonto(marcacaoPonto);
 
@@ -65,6 +66,7 @@ public class MarcacaoPontosControle {
         return ResponseEntity.status(HttpStatus.OK).body("Ponto batido com sucesso!");
     }
     
+    // Atualizar um ponto
     @PutMapping("/atualizar")
     public ResponseEntity<String> putAtualizarPontos(@RequestBody MarcacaoPontos mpontos_att) {
         Boolean att_sucessful = mponto_servico.updateMponto(mpontos_att);
