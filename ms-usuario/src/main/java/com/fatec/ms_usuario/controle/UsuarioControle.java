@@ -66,7 +66,7 @@ public class UsuarioControle {
 
         NivelAcesso acesso = nivelAcessoRepositorio.findById(novo.getNivelAcesso_cod()).orElse(null);
         if(acesso == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         novo.setNivelAcesso(acesso);
         repositorio.save(novo);
@@ -111,8 +111,10 @@ public class UsuarioControle {
         alvo.setUsuario_email(usuario.getUsuario_email());
         alvo.setUsuario_DataNascimento(usuario.getUsuario_DataNascimento());
         //
-        alvo.setNivelAcesso(
-                nivelAcessoRepositorio.findById(usuario.getNivelAcesso_cod()).get());
+        NivelAcesso acesso = nivelAcessoRepositorio.findById(usuario.getNivelAcesso_cod()).orElse(null);
+        if(acesso == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        alvo.setNivelAcesso(acesso);
 
         repositorio.save(alvo);
         return ResponseEntity.ok("Usuário atualizado com sucesso.\n" + alvo.getNivelAcesso());
