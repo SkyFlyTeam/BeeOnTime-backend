@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.ms_usuario.entidade.Jornada;
+import com.fatec.ms_usuario.entidade.Setor;
 import com.fatec.ms_usuario.entidade.Usuario;
 import com.fatec.ms_usuario.repositorio.JornadaRepositorio;
+import com.fatec.ms_usuario.repositorio.SetorRepositorio;
 import com.fatec.ms_usuario.repositorio.UsuarioRepositorio;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +35,15 @@ public class UsuarioControle {
     @Autowired
     private JornadaRepositorio jornadaRepositorio;
 
+    @Autowired
+    private EmpresaRepositorio empresaRepositorio;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private SetorRepositorio SetorRepositorio;
+
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> obterUsuarios() {
 		List<Usuario> usuarios = repositorio.findAll();
@@ -44,6 +55,24 @@ public class UsuarioControle {
     public ResponseEntity<?> cadastrarUsuario(@RequestBody Usuario novo) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         if (novo != null) {
+            Optional<Empresa> empresaOptional = empresaRepositorio.findById(novo.getEmpCod());
+            Optional<Setor> setorOptional = SetorRepositorio.findById(novo.getSetorCod());
+            if (empresaOptional.isPresent() && setorOptional.isPresent()) {
+                Empresa empresa = empresaOptional.get();
+                Setor setor = setorOptional.get();
+                // Aqui, associamos o empresa ao usuário
+                novo.setEmpresa(empresa);
+                novo.setSetor(setor);
+
+                // Salva o usuário com o empCod preenchido corretamente
+                repositorio.save(novo);
+                status = HttpStatus.OK;
+            } else {
+                return new ResponseEntity<>("Empresa com ID " + novo.getEmpCod() + " não encontrada.", HttpStatus.BAD_REQUEST);
+            }
+
+            novo.setUsuario_senha(passwordEncoder.encode(novo.getUsuario_senha()));
+
             repositorio.save(novo);
             status = HttpStatus.OK;
         }

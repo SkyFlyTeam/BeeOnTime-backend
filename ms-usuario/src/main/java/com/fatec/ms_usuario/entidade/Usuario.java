@@ -15,7 +15,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
-@Data
+
 public class Usuario {
 
 	@Id
@@ -53,9 +53,68 @@ public class Usuario {
 	
 	@Column
 	private String usuario_cargo;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "empCod", referencedColumnName = "empCod", insertable = false, updatable = false)
+	@JsonIgnore
+	private Empresa empresa;
+
+	private Long empCod; // Foreign key field for Empresa	
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "setorCod", referencedColumnName = "setorCod", insertable = false, updatable = false)
+	private Setor setor;
+
+	private Long setorCod;
+
+	@ManyToOne
+	@JoinColumn(name = "nivelacesso_cod", referencedColumnName = "nivelacesso_cod", insertable = false, updatable = false)
+	private NivelAcesso nivelAcesso;
+	@Column(name = "nivelacesso_cod")
+	private Long nivelAcesso_cod;
 	
-	@OneToMany(mappedBy = "usuario")
-	private List<Jornada> jornadas;
+	public Empresa getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
+
+	public Long getEmpCod() {
+		return empCod;
+	}
+
+	public void setEmpCod(Long empCod) {
+		this.empCod = empCod;
+	}
+
+	public Setor getSetor() {
+		return setor;
+	}
+
+	public void setSetor(Setor setor) {
+		this.setor = setor;
+	}
+
+	public Long getSetorCod() {
+		return setorCod;
+	}
+
+	public void setSetorCod(Long setorCod) {
+		this.setorCod = setorCod;
+	}
+
+	public Jornada getJornadas() {
+		return jornadas;
+	}
+
+	public void setJornadas(Jornada jornadas) {
+		this.jornadas = jornadas;
+	}
+
+	@OneToOne(mappedBy = "usuario")
+	private Jornada jornadas;
 
 	public Long getUsuario_cod() {
 		return usuario_cod;
