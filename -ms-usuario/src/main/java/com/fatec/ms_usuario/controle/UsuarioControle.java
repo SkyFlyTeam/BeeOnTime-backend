@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fatec.ms_usuario.entidade.Empresa;
@@ -38,6 +39,9 @@ public class UsuarioControle {
     @Autowired
     private EmpresaRepositorio empresaRepositorio;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> obterUsuarios() {
 		List<Usuario> usuarios = repositorio.findAll();
@@ -61,6 +65,9 @@ public class UsuarioControle {
             } else {
                 return new ResponseEntity<>("Empresa com ID " + novo.getEmpCod() + " não encontrada.", HttpStatus.BAD_REQUEST);
             }
+
+            novo.setUsuario_senha(passwordEncoder.encode(novo.getUsuario_senha()));
+
             repositorio.save(novo);
             status = HttpStatus.OK;
         }
@@ -97,8 +104,8 @@ public class UsuarioControle {
         alvo.setUsuario_cargaHoraria(usuario.getUsuario_cargaHoraria());
         alvo.setUsuarioTipoContratacao(usuario.getUsuarioTipoContratacao());
         alvo.setUsuario_dataContratacao(usuario.getUsuario_dataContratacao());
-        alvo.setUsuario_senha(usuario.getUsuario_senha());
-        alvo.setUsuario_email(usuario.getUsuario_email());
+        alvo.setUsuario_senha(passwordEncoder.encode(usuario.getUsuario_senha()));
+        alvo.setUsuarioEmail(usuario.getUsuarioEmail());
         alvo.setUsuario_DataNascimento(usuario.getUsuario_DataNascimento());
         alvo.setEmpCod(usuario.getEmpCod());
         alvo.setSetorCod(usuario.getSetorCod());
@@ -126,4 +133,8 @@ public class UsuarioControle {
         repositorio.delete(usuarioOptional.get());
         return ResponseEntity.ok("Usuário e suas jornadas excluídos com sucesso.");
     }
+
+    public Optional<Usuario> obterFuncionarioEmail(String email) {
+        return repositorio.findByUsuarioEmail(email);
+     }
 }

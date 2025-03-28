@@ -1,4 +1,4 @@
-package com.mslogin.ms_login.seguranca;
+package com.fatec.ms_usuario.seguranca;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

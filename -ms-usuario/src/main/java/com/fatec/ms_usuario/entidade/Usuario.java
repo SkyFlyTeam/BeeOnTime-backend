@@ -51,7 +51,7 @@ public class Usuario {
 	private String usuario_senha;
 	
 	@Column
-	private String usuario_email;
+	private String usuarioEmail;
 	
 	@Column
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -73,6 +73,12 @@ public class Usuario {
 	private Setor setor;
 
 	private Long setorCod;
+
+	@ManyToOne
+	@JoinColumn(name = "nivelacesso_cod", referencedColumnName = "nivelacesso_cod", insertable = false, updatable = false)
+	private NivelAcesso nivelAcesso;
+	@Column(name = "nivelacesso_cod")
+	private Long nivelAcesso_cod;
 	
 	public Empresa getEmpresa() {
 		return empresa;
@@ -183,12 +189,12 @@ public class Usuario {
 	}
 	
 
-	public String getUsuario_email() {
-		return usuario_email;
+	public String getUsuarioEmail() {
+		return usuarioEmail;
 	}
 
-	public void setUsuario_email(String usuario_email) {
-		this.usuario_email = usuario_email;
+	public void setUsuarioEmail(String usuarioEmail) {
+		this.usuarioEmail = usuarioEmail;
 	}
 
 	
@@ -207,6 +213,20 @@ public class Usuario {
 	
 	public void setUsuario_cargo(String usuario_cargo) {
 		this.usuario_cargo = usuario_cargo;
+	}
+
+	public NivelAcesso getNivelAcesso(){
+		return nivelAcesso;
+	}
+	public void setNivelAcesso(NivelAcesso nivelAcesso){
+		this.nivelAcesso = nivelAcesso;
+	}
+
+	public Long getNivelAcesso_cod() {
+		return nivelAcesso_cod;
+	}
+	public void setNivelAcesso_cod(Long nivelAcesso_cod){
+		this.nivelAcesso_cod = nivelAcesso_cod;
 	}
 
 }
