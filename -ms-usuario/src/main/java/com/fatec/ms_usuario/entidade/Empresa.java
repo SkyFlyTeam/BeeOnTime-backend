@@ -73,9 +73,6 @@ public class Empresa {
     }
 
     public void setEmpCnpj(String empCnpj) {
-        if (empCnpj == null || empCnpj.length() != 14) {
-            throw new IllegalArgumentException("CNPJ deve ter 14 dígitos");
-        }
         this.empCnpj = empCnpj;
     }
 
@@ -92,9 +89,6 @@ public class Empresa {
     }
 
     public void setEmpCep(String empCep) {
-        if (empCep == null || empCep.length() != 8) {
-            throw new IllegalArgumentException("CNPJ deve ter 14 dígitos");
-        }
         this.empCep = empCep;
     }
 
