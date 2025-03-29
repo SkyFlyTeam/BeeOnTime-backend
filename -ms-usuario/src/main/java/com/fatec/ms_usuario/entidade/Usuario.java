@@ -69,7 +69,7 @@ public class Usuario {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "setorCod", referencedColumnName = "setorCod", insertable = false, updatable = false)
-	@JsonIgnore
+	//@JsonIgnore
 	private Setor setor;
 
 	private Long setorCod;
