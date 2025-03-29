@@ -25,7 +25,7 @@ public class SegurancaConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
+    /* @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
@@ -35,19 +35,19 @@ public class SegurancaConfig {
                 )
                 .addFilterBefore(jwtAuthFiltro, UsernamePasswordAuthenticationFilter.class)
                 .build();
-    }
+    } */
 
     // Função para testar requisições sem a autenticação jwt
     //Essa função faz com que a aplicação receba requisições de qualquer ip
-    // @Bean
-    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    //     return http
-    //             .csrf(csrf -> csrf.disable())
-    //             .authorizeHttpRequests(auth -> auth
-    //                             .anyRequest().permitAll() // Disable authentication for all routes
-    //             )
-    //             .build();
-    // }
+     @Bean
+     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+         return http
+                 .csrf(csrf -> csrf.disable())
+                 .authorizeHttpRequests(auth -> auth
+                                 .anyRequest().permitAll() // Disable authentication for all routes
+                 )
+                 .build();
+     }
 
 
     //Função para configurar o cors
