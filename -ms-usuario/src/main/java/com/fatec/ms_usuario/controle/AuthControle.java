@@ -30,7 +30,9 @@ public class AuthControle {
 
         if (funcionarioEncontrado.isPresent() && passwordEncoder.matches(funcionario.getUsuario_senha(), funcionarioEncontrado.get().getUsuario_senha())) {
             String token = jwtUtil.generateToken(funcionario.getUsuarioEmail());
-            return ResponseEntity.ok(token);
+            Long id = funcionarioEncontrado.get().getUsuario_cod();
+            String json = "{ \"token\": \""+ token +"\", \"id\": \"" + id + "\"}";
+            return ResponseEntity.ok(json);
         } else {
             return ResponseEntity.status(401).body("Credenciais inválidas");
         }
