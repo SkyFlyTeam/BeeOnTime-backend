@@ -3,6 +3,7 @@ package com.msponto.ms_ponto.dto;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UsuarioDTO {
 
@@ -12,7 +13,7 @@ public class UsuarioDTO {
 
 	private String usuario_cpf;
 
-	private Double usuario_nrRegistro;
+	private Double usuario_nRegistro;
 
 	private Integer usuario_cargaHoraria;
 
@@ -30,7 +31,14 @@ public class UsuarioDTO {
 
 	private String usuario_cargo;
     
+	@JsonProperty("jornadas")
 	private JornadaDTO jornada;
+
+	private Long empCod;
+
+	private SetorDTO setor;
+
+	private NivelAcessoDTO nivelAcesso;
 
 	public Long getUsuario_cod() {
 		return usuario_cod;
@@ -57,11 +65,11 @@ public class UsuarioDTO {
 	}
 	
 	public Double getUsuario_nRegistro() {
-		return usuario_nrRegistro;
+		return usuario_nRegistro;
 	}
 
 	public void setUsuario_nRegistro(Double usuario_nRegistro) {
-		this.usuario_nrRegistro = usuario_nRegistro;
+		this.usuario_nRegistro = usuario_nRegistro;
 	}
 	
 	public Integer getUsuario_cargaHoraria() {
@@ -130,4 +138,30 @@ public class UsuarioDTO {
 	public void setJornada(JornadaDTO jornada) {
 		this.jornada = jornada;
 	}
+
+	public Long getEmpCod() {
+		return empCod;
+	}
+
+	public void setEmpCod(Long empCod) {
+		this.empCod = empCod;
+	}
+
+	public SetorDTO getSetor() {
+		return setor;
+	}
+
+	public void setSetor(SetorDTO setor) {
+		this.setor = setor;
+	}
+
+	public NivelAcessoDTO getNivelAcesso() {
+		return nivelAcesso;
+	}
+
+	public void setNivelAcesso(NivelAcessoDTO nivelAcesso) {
+		this.nivelAcesso = nivelAcesso;
+	}
+
+	
 }

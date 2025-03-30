@@ -17,7 +17,7 @@ public class UsuarioClient {
 
     public List<UsuarioDTO> getAllUsuarios() {
         // URL do microserviço de usuarios
-        String usuarioServiceUrl = "http://demo9651824.mockable.io/usuario/usuarios"; 
+        String usuarioServiceUrl = "http://localhost:8081/usuario/usuarios"; 
         
         return webUsuarioBuilder.build()
                 .get()
@@ -30,7 +30,7 @@ public class UsuarioClient {
 
     public UsuarioDTO getUsuarioByCod(Long usuario_cod) {
         // URL do microserviço de usuarios
-        String usuarioServiceUrl = "http://demo9651824.mockable.io/usuario/" + usuario_cod; 
+        String usuarioServiceUrl = "http://localhost:8081/usuario/" + usuario_cod; 
         
         return webUsuarioBuilder.build()
             .get()
