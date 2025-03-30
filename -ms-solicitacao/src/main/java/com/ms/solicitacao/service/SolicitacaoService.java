@@ -27,7 +27,7 @@ public class SolicitacaoService {
 	@Autowired
     private RestTemplate restTemplate;
 
-    private static final String URL_SERVICO_USUARIO = "http://localhost:8090/usuario/";  
+    private static final String URL_SERVICO_USUARIO = "http://localhost:8081/usuario/";  
 
     public List<Solicitacao> findAll() {
         List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();

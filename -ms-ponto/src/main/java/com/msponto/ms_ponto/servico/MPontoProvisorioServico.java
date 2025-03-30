@@ -75,7 +75,7 @@ public class MPontoProvisorioServico {
                     }
                 }
 
-                mpontoprov_repo.delete(mpontoprov_existente);
+                // mpontoprov_repo.delete(mpontoprov_existente);
                 return true;
             }
             

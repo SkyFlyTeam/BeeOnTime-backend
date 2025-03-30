@@ -69,16 +69,16 @@ public class MPontoProvisorio {
         return this.horasCod;
     }
 
-    public void setHorasCod(Long solicitacaoCod) {
-        this.solicitacaoCod = solicitacaoCod;
+    public void setHorasCod(Long horasCod) {
+        this.horasCod = horasCod;
     }
 
     public Long getSolicitacaoCod() {
         return this.solicitacaoCod;
     }
 
-    public void setSolicitacaoCod(Long horasCod) {
-        this.horasCod = horasCod;
+    public void setSolicitacaoCod(Long solicitacaoCod) {
+        this.solicitacaoCod = solicitacaoCod;
     }
 
     public LocalDate getData() {
