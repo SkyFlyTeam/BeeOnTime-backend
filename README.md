@@ -1,101 +1,24 @@
-## Memória de comandos
+## Instalação e utilização
 
-```powershell
-mkdir backend
-```
-```powershell
-cd backend
-```
-## Spring
+### Configuração do backend
 
-```powershell
-# não deu certo
-Invoke-WebRequest "https://start.spring.io/starter.tgz?dependencies=web&type=maven-project&groupId=com.meuprojeto&artifactId=backend" -OutFile backend.zip
-Expand-Archive -Path backend.zip -DestinationPath backend
-```
+- Fazer o clone do repositório backend
+https://github.com/SkyFlyTeam/BeeOnTime-backend.git
 
-Como esse passo acima não deu certo, usei um novo caminho criando um projeto Spring Boot no site [spring initializr](https://start.spring.io/). Segue os parâmetros que eu preenchi:
+- Dentro da pasta "BeeOnTime-backend" entrar na pasta de "-ms-usuario" e abrir em seu editor de código
 
-
-<img src="./img/spring-initializr.png" alt="Diagrama" width="500"/>
-
-Na pasta backend eu rodei:
-
-```powershell
-# Para o Maven compilar o projeto
-mvm clean package
-```
-
-```powershell
-mvm spring-boot:run
-```
-
-Agora acesse o link (http://localhost:8080/api/hello) e você verá a mensagem: "Spring Boot funcionando".
-
-```ts
-
-backend/
-│── src/
-│   ├── main/
-│   │   ├── java/com/exemplo/auth/
-│   │   │   ├── config/
-│   │   │   │   ├── MongoDBConfig.java
-│   │   │   │   ├── MySQLConfig.java
-│   │   │   │   ├── PostgreSQLConfig.java
-│   │   │   │   ├── RedisConfig.java
-│   │   │   ├── controller/          # Endpoints REST (Login, Registro, etc.)
-│   │   │   │   ├── ConnectionTestController.java
-│   │   │   ├── model/               # Modelos do banco de dados (JPA)
-│   │   │   │   ├── UserRepository.java
-│   │   │   ├── service/             # Lógica de autenticação e cache
-│   │   │   │   ├── AuthService.java
-│   │   │   │   ├── TokenService.java
-│   │   │   ├── dto/                 # DTOs para requisições e respostas
-│   │   │   │   ├── UserDTO.java
-│   │   │   ├── security/            # Configurações de segurança (JWT)
-│   │   │   │   ├── JwtUtil.java
-│   ├── resources/                   # Arquivos de configuração
-│   │   ├── application.yml (Opcional)
-├── pom.xml                           # Dependências do Maven
-└── Dockerfile                        # Arquivo Docker para containerizar a aplicação
-
+- Fazendo o caminho src > main > resources terá o arquivo "application.properties" onde você irá configurar seu banco de dados (será necessário ter criado ele antecipadamente)
 
 ```
-
-## Testes no Postman
-
-Para a realização dos testes no `Postman`, você deve usar os seguintes endereços:
-
-```ts
-# GET
-http://localhost:8080/test/postgres
+spring.datasource.url=jdbc:mysql://localhost:3306/[NOME_SCHEMA]
+spring.datasource.username=[USUÁIO]
+spring.datasource.password=[SENHA]
+spring.jpa.show-sql=true
 ```
 
-```ts
-# GET
-http://localhost:8080/test/mongo
+- Após configurar estes arquivos digite o seguinte comando dentro da pasta para iniciar o projeto:o 
+```
+mvn spring-boot:run
 ```
 
-```ts
-# GET
-http://localhost:8080/test/redis
-```
-
-```ts
-# GET
-http://localhost:8080/test/mysql
-```
-
-## Rotas disponíveis
-
-<div align="center">
-
-|                                                                    Tipo | Rota                     | Ação                               |
-| ----------------------------------------------------------------------: | :----------------------- | :--------------------------------- |
-|  <hr>                                                                   |  <hr>                    | **Controle de usuários**       |
-|    [![](https://img.shields.io/badge/GET-2E8B57?style=for-the-badge)]() | `http://localhost:8080`                | Listagem de usuários               |
-|    [![](https://img.shields.io/badge/GET-2E8B57?style=for-the-badge)]() | `http://localhost:8080/buscar-id/1`            | Dados de um usuário específico     |
-|   [![](https://img.shields.io/badge/POST-4682B4?style=for-the-badge)]() | `http://localhost:8080/cadastrar`          | Cadastro de usuários               |
-|    [![](https://img.shields.io/badge/PUT-9370DB?style=for-the-badge)]() | `http://localhost:8080/atualizar-id`          | Alteração dos dados do usuário     |
-| [![](https://img.shields.io/badge/DELETE-CD853F?style=for-the-badge)]() | `http://localhost:8080/2`     | Exclusão de usuários               |
-
+- Repita o processo com o -ms-solicitações, rodando os dois ao mesmo tempo
