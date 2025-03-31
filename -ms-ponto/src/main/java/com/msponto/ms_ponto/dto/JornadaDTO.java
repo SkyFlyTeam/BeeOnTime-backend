@@ -20,7 +20,7 @@ public class JornadaDTO {
 	
 	private Time jornada_horarioSaida;
 
-	private Float jornada_horarioAlmoco;
+	private Time jornada_horarioAlmoco;
 	
 	@JsonIgnore
 	private UsuarioDTO usuario;
@@ -83,11 +83,11 @@ public class JornadaDTO {
         this.usuario = usuario;
     }
 
-	public float getJornada_horarioAlmoco() {
+	public Time getJornada_horarioAlmoco() {
 		return jornada_horarioAlmoco;
 	}
 
-	public void setJornada_horarioAlmoco(Float jornada_horarioAlmoco) {
+	public void setJornada_horarioAlmoco(Time jornada_horarioAlmoco) {
 		this.jornada_horarioAlmoco = jornada_horarioAlmoco;
 	}
 }

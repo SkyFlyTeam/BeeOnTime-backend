@@ -25,17 +25,17 @@ public class SegurancaConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /* @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/auth/login").permitAll() // ✅ Allow login & registration
-                                .anyRequest().authenticated() // Protect other routes
-                )
-                .addFilterBefore(jwtAuthFiltro, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    } */
+    // @Bean
+    // public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    //     return http
+    //             .csrf(csrf -> csrf.disable())
+    //             .authorizeHttpRequests(auth -> auth
+    //                             .requestMatchers("/auth/login").permitAll() // ✅ Allow login & registration
+    //                             .anyRequest().authenticated() // Protect other routes
+    //             )
+    //             .addFilterBefore(jwtAuthFiltro, UsernamePasswordAuthenticationFilter.class)
+    //             .build();
+    // } 
 
     // Função para testar requisições sem a autenticação jwt
     //Essa função faz com que a aplicação receba requisições de qualquer ip
@@ -51,16 +51,16 @@ public class SegurancaConfig {
 
 
     //Função para configurar o cors
-    // @Bean
-    // public CorsConfigurationSource corsConfigurationSource() {
-    //     CorsConfiguration configuration = new CorsConfiguration();
-    //     configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Frontend URL
-    //     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-    //     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     source.registerCorsConfiguration("/**", configuration);
-    //     return source;
-    // }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("*")); // Frontend URL
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
 
 }

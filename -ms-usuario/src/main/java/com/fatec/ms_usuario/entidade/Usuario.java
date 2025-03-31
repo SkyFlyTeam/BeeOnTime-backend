@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -74,6 +75,11 @@ public class Usuario {
 
 	private Long setorCod;
 
+	@OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_cod", referencedColumnName = "usuario_cod", insertable = false, updatable = false)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Jornada jornadas;
+
 	@ManyToOne
 	@JoinColumn(name = "nivelacesso_cod", referencedColumnName = "nivelacesso_cod", insertable = false, updatable = false)
 	private NivelAcesso nivelAcesso;
@@ -119,9 +125,6 @@ public class Usuario {
 	public void setJornadas(Jornada jornadas) {
 		this.jornadas = jornadas;
 	}
-
-	@OneToOne(mappedBy = "usuario")
-	private Jornada jornadas;
 
 	public Long getUsuario_cod() {
 		return usuario_cod;
