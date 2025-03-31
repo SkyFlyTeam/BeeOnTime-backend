@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.ms_usuario.dto.UsuarioDTO;
 import com.fatec.ms_usuario.entidade.Empresa;
 import com.fatec.ms_usuario.entidade.Jornada;
 import com.fatec.ms_usuario.entidade.Setor;
@@ -55,28 +56,54 @@ public class UsuarioControle {
 
 
     @PostMapping("/cadastrar")
-    public ResponseEntity<?> cadastrarUsuario(@RequestBody Usuario novo) {
-        if (novo == null || novo.getEmpCod() == null || novo.getSetorCod() == null) {
+    public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO novoDTO) {
+        if (novoDTO == null || novoDTO.getEmpCod() == null || novoDTO.getSetorCod() == null) {
             return new ResponseEntity<>("empCod ou setorCod está nulo", HttpStatus.BAD_REQUEST);
         }
 
-        Optional<Empresa> empresaOptional = empresaRepositorio.findById(novo.getEmpCod());
-        Optional<Setor> setorOptional = setorRepositorio.findById(novo.getSetorCod());
+        // Recupera Empresa e Setor pelo código
+        Optional<Empresa> empresaOptional = empresaRepositorio.findById(novoDTO.getEmpCod());
+        Optional<Setor> setorOptional = setorRepositorio.findById(novoDTO.getSetorCod());
 
         if (empresaOptional.isEmpty() || setorOptional.isEmpty()) {
             return new ResponseEntity<>("Empresa ou Setor não encontrado", HttpStatus.BAD_REQUEST);
         }
 
-        novo.setEmpresa(empresaOptional.get());
-        novo.setSetor(setorOptional.get());
+        // Criando o objeto Usuario
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setUsuario_nome(novoDTO.getUsuario_nome());
+        novoUsuario.setUsuario_cpf(novoDTO.getUsuario_cpf());
+        novoUsuario.setUsuario_nrRegistro(novoDTO.getUsuario_nrRegistro());
+        novoUsuario.setUsuario_cargaHoraria(novoDTO.getUsuario_cargaHoraria());
+        novoUsuario.setUsuarioTipoContratacao(novoDTO.getUsuarioTipoContratacao());
+        novoUsuario.setUsuario_dataContratacao(novoDTO.getUsuario_dataContratacao());
+        novoUsuario.setUsuario_senha(passwordEncoder.encode(novoDTO.getUsuario_senha()));
+        novoUsuario.setUsuarioEmail(novoDTO.getUsuarioEmail());
+        novoUsuario.setUsuario_DataNascimento(novoDTO.getUsuario_DataNascimento());
+        novoUsuario.setUsuario_cargo(novoDTO.getUsuario_cargo());
 
-        novo.setUsuario_senha(passwordEncoder.encode(novo.getUsuario_senha()));
+        novoUsuario.setEmpCod(novoDTO.getEmpCod());
+        novoUsuario.setSetorCod(novoDTO.getSetorCod());
+        novoUsuario.setNivelAcesso_cod(novoDTO.getNivelAcesso_cod());
 
-        repositorio.save(novo);
+        novoUsuario.setEmpresa(empresaOptional.get());
+        novoUsuario.setSetor(setorOptional.get());
+
+        repositorio.save(novoUsuario);
+
+        Jornada jornada = new Jornada();
+        jornada.setUsuario(novoUsuario); 
+        jornada.setUsuario_cod(novoUsuario.getUsuario_cod());
+        jornada.setJornada_horarioFlexivel(novoDTO.getHorarioFlexivel());
+        jornada.setJornada_diasSemana(novoDTO.getDiasSemana()); 
+        jornada.setJornada_horarioEntrada(novoDTO.getHorarioEntrada()); 
+        jornada.setJornada_horarioSaida(novoDTO.getHorarioSaida()); 
+        jornada.setJornada_horarioAlmoco(novoDTO.getHorarioAlmoco());
+
+        jornadaRepositorio.save(jornada);
+
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
-
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> obterUsuarioId(@PathVariable Long id) {
