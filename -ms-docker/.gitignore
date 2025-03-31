@@ -51,7 +51,9 @@ bin/
 Thumbs.db
 
 # Database files
-
+*.h2.db
+*.mv.db
+*.sql
 
 # Docker
 docker-compose.override.yml
@@ -62,4 +64,3 @@ node_modules/
 secrets/
 application-*.yml
 application-*.properties
-*.zip
