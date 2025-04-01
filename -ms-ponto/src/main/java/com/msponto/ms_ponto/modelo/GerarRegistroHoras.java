@@ -49,7 +49,7 @@ public class GerarRegistroHoras {
                     Boolean dia_trabalhado = verificador.verificar(usuario, dataAtual);
                     
                     if(dia_trabalhado){
-                        horas_servico.createEmptyHoras(usuario.getUsuario_cod(), dataAtual);
+                        horas_servico.createEmptyHoras(usuario, dataAtual);
                     }
                 }
             }

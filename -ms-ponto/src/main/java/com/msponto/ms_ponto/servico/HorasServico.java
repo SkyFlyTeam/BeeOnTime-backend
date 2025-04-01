@@ -81,14 +81,14 @@ public class HorasServico {
         }
     }
 
-    public Horas createEmptyHoras(Long usuario_cod, LocalDate data){
+    public Horas createEmptyHoras(UsuarioDTO usuario, LocalDate data){
         Horas horas = new Horas(); 
         
-        horas.setUsuarioCod(usuario_cod);
+        horas.setUsuarioCod(usuario.getUsuario_cod());
         horas.setHorasExtras(0.0f); 
         horas.setHorasNoturnas(0.0f);
         horas.setHorasTrabalhadas(0.0f);
-        horas.setHorasFaltantes(0.0f);
+        horas.setHorasFaltantes((float) usuario.getUsuario_cargaHoraria());
         horas.setHorasData(data);
 
         horas_repo.save(horas);
