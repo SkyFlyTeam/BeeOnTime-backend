@@ -2,6 +2,7 @@ package com.msponto.ms_ponto.modelo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import com.msponto.ms_ponto.dto.UsuarioDTO;
+import com.msponto.ms_ponto.entidade.mysql.Horas;
 import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 import com.msponto.ms_ponto.servico.HorasServico;
 
@@ -24,10 +26,10 @@ public class GerarRegistroHoras {
     @Autowired
     private HorasServico horas_servico;
 
-    // @PostConstruct
-    // public void runJobOnStartup() { // Rodar o job de verificação de usuários ao iniciar a aplicação
-    //     verificarDiaTrabalhadoDosUsuarios();  
-    // }
+    @PostConstruct
+    public void runJobOnStartup() { // Rodar o job de verificação de usuários ao iniciar a aplicação
+        verificarDiaTrabalhadoDosUsuarios();  
+    }
 
     // Job Cron para rodar uma vez por dia, à meia-noite
     @Scheduled(cron = "0 0 0 * * ?") // Execução diária às 00:00
@@ -39,12 +41,17 @@ public class GerarRegistroHoras {
         
         // Enviar uma tarefa para a fila para cada usuário
         for (UsuarioDTO usuario : usuarios) {
-            
-            VerificadorDiaTrabalhado verificador = new VerificadorDiaTrabalhado();
-            Boolean dia_trabalhado = verificador.verificar(usuario, dataAtual);
-            
-            if(dia_trabalhado){
-                horas_servico.createEmptyHoras(usuario.getUsuario_cod(), dataAtual);
+            if(usuario.getNivelAcesso().getNivelAcesso_cod() != 0){
+                Optional<Horas>  horas_existe = horas_servico.getOptionalUsuarioHorasByDate(usuario.getUsuario_cod(), dataAtual);
+
+                if(horas_existe.isEmpty()){
+                    VerificadorDiaTrabalhado verificador = new VerificadorDiaTrabalhado();
+                    Boolean dia_trabalhado = verificador.verificar(usuario, dataAtual);
+                    
+                    if(dia_trabalhado){
+                        horas_servico.createEmptyHoras(usuario.getUsuario_cod(), dataAtual);
+                    }
+                }
             }
         }
     }

@@ -37,7 +37,19 @@ public class HorasServico {
     
     public Horas getUsuarioHorasByDate(Long usuario_cod, LocalDate horas_data){
         List<Horas> usuario_horas = horas_repo.findByUsuarioCodAndHorasData(usuario_cod, horas_data);
+        
+        if (usuario_horas.isEmpty()) {
+            return null;
+        }
+    
         return usuario_horas.get(0);
+    }
+
+    public Optional<Horas> getOptionalUsuarioHorasByDate(Long usuario_cod, LocalDate horas_data) {
+        List<Horas> usuario_horas = horas_repo.findByUsuarioCodAndHorasData(usuario_cod, horas_data);
+        
+        // Retorna um Optional vazio se a lista estiver vazia
+        return usuario_horas.isEmpty() ? Optional.empty() : Optional.of(usuario_horas.get(0));
     }
 
     public List<Horas> getAllHorasByDate(LocalDate horas_data){
