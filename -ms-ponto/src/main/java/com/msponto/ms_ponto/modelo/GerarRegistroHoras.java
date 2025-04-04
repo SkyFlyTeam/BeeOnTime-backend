@@ -1,17 +1,10 @@
 package com.msponto.ms_ponto.modelo;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import com.msponto.ms_ponto.dto.UsuarioDTO;
-import com.msponto.ms_ponto.entidade.mysql.Horas;
-import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 import com.msponto.ms_ponto.servico.HorasServico;
 
 import jakarta.annotation.PostConstruct;
@@ -19,9 +12,6 @@ import jakarta.annotation.PostConstruct;
 @EnableScheduling
 @Configuration
 public class GerarRegistroHoras {
-
-    @Autowired
-    private UsuarioClient usuarioClient;
 
     @Autowired
     private HorasServico horas_servico;
@@ -35,24 +25,6 @@ public class GerarRegistroHoras {
     @Scheduled(cron = "0 0 0 * * ?") // Execução diária às 00:00
     public void verificarDiaTrabalhadoDosUsuarios() {
         System.out.println("JOB CRON EXECUTADO");
-        // Buscar todos os usuários do microserviço
-        List<UsuarioDTO> usuarios = usuarioClient.getAllUsuarios();
-        LocalDate dataAtual = LocalDate.now();
-        
-        // Enviar uma tarefa para a fila para cada usuário
-        for (UsuarioDTO usuario : usuarios) {
-            if(usuario.getNivelAcesso().getNivelAcesso_cod() != 0){
-                Optional<Horas>  horas_existe = horas_servico.getOptionalUsuarioHorasByDate(usuario.getUsuario_cod(), dataAtual);
-
-                if(horas_existe.isEmpty()){
-                    VerificadorDiaTrabalhado verificador = new VerificadorDiaTrabalhado();
-                    Boolean dia_trabalhado = verificador.verificar(usuario, dataAtual);
-                    
-                    if(dia_trabalhado){
-                        horas_servico.createEmptyHoras(usuario, dataAtual);
-                    }
-                }
-            }
-        }
+        horas_servico.verificarDiaTrabalhadoDosUsuarios();
     }
 }

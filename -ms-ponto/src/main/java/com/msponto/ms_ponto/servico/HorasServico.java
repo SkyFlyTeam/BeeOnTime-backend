@@ -14,6 +14,7 @@ import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos.Ponto;
 import com.msponto.ms_ponto.entidade.mysql.Horas;
 import com.msponto.ms_ponto.enums.TipoPonto;
 import com.msponto.ms_ponto.modelo.HorasAtualizador;
+import com.msponto.ms_ponto.modelo.VerificadorDiaTrabalhado;
 import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 import com.msponto.ms_ponto.repositorio.mysql.HorasRepositorio;
 
@@ -163,4 +164,26 @@ public class HorasServico {
            return false;
        }
    }
+
+   public void verificarDiaTrabalhadoDosUsuarios() {
+        // Buscar todos os usuários do microserviço
+        List<UsuarioDTO> usuarios = usuarioClient.getAllUsuarios();
+        LocalDate dataAtual = LocalDate.now();
+        
+        // Enviar uma tarefa para a fila para cada usuário
+        for (UsuarioDTO usuario : usuarios) {
+            if(usuario.getNivelAcesso().getNivelAcesso_cod() != 0){
+                Optional<Horas>  horas_existe = getOptionalUsuarioHorasByDate(usuario.getUsuario_cod(), dataAtual);
+
+                if(horas_existe.isEmpty()){
+                    VerificadorDiaTrabalhado verificador = new VerificadorDiaTrabalhado();
+                    Boolean dia_trabalhado = verificador.verificar(usuario, dataAtual);
+                    
+                    if(dia_trabalhado){
+                        createEmptyHoras(usuario, dataAtual);
+                    }
+                }
+            }
+        }
+    }
 }
