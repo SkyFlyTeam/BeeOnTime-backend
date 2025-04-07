@@ -41,6 +41,16 @@ public class SolicitacaoController {
 		return solicitacaoService.findAll();
 	}
 	
+	@GetMapping("/usuario/{id}")
+	private List<Solicitacao> findAllByUsuario(@PathVariable long id) {
+		return solicitacaoService.findAllByUsuario(id);
+	}
+	
+	@GetMapping("/setor/{setorCod}")
+	private List<Solicitacao> findAllBySetor(@PathVariable long setorCod){
+		return solicitacaoService.findAllBySetor(setorCod);
+	}
+	
 	@GetMapping("/{id}")
 	private Solicitacao findById(@PathVariable long id) {
 		return solicitacaoService.findById(id);
@@ -52,6 +62,7 @@ public class SolicitacaoController {
 	    @RequestParam(value = "solicitacaoAnexo", required = false) MultipartFile solicitacaoAnexo
 	) {
 	    try {
+	    	solicitacaoJson = solicitacaoJson.replace('\u00A0', ' ').trim();
 	        Solicitacao solicitacao = objectMapper.readValue(solicitacaoJson, Solicitacao.class);
 
 	        if (solicitacaoAnexo != null && !solicitacaoAnexo.isEmpty()) {
