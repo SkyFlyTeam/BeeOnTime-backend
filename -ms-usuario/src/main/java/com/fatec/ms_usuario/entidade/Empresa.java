@@ -27,7 +27,15 @@ public class Empresa {
     @Column
     private String empRazaoSocial;
 
-    @Column
+    public List<Setor> getSetores() {
+		return setores;
+	}
+
+	public void setSetores(List<Setor> setores) {
+		this.setores = setores;
+	}
+
+	@Column
     private String empCep;
 
     @Column
@@ -41,6 +49,9 @@ public class Empresa {
 
     @OneToMany(mappedBy = "empresa")
     private List<Usuario> usuarios;
+
+    @OneToMany(mappedBy = "empresa")
+    private List<Setor> setores;
 
     // Getters and Setters
 
