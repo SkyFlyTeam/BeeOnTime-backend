@@ -46,11 +46,17 @@ public class Solicitacao {
     @Transient
     private String usuarioCargo;
     
+    @Transient
+    private int setorCod;
+    
+    @Transient
+    private int nivelAcesso_cod;
+    
     @ManyToOne
     @JoinColumn(name = "tipoSolicitacaoCod", nullable = false)
     private SolicitacaoTipo tipoSolicitacaoCod;
 
-	public long getSolicitacaoCod() {
+	public long getSolicitacaoCod() { 
 		return solicitacaoCod;
 	}
 
@@ -136,6 +142,22 @@ public class Solicitacao {
 
 	public void setSolicitacaoAnexoNome(String solicitacaoAnexoNome) {
 		this.solicitacaoAnexoNome = solicitacaoAnexoNome;
+	}
+
+	public int getSetorCod() {
+		return setorCod;
+	}
+
+	public void setSetorCod(int setorCod) {
+		this.setorCod = setorCod;
+	}
+
+	public int getNivelAcesso_cod() {
+		return nivelAcesso_cod;
+	}
+
+	public void setNivelAcesso_cod(int nivelAcesso_cod) {
+		this.nivelAcesso_cod = nivelAcesso_cod;
 	}
 
 }
