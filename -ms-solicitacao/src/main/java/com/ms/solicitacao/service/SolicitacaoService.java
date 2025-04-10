@@ -97,6 +97,10 @@ public class SolicitacaoService {
 	    if (solicitacao.getSolicitacaoMensagem() != null) {
 	        selecionado.setSolicitacaoMensagem(solicitacao.getSolicitacaoMensagem());
 	    }
+	    
+	    if (solicitacao.getHorasSolicitadas() != null) {
+	    	selecionado.setHorasSolicitadas(solicitacao.getHorasSolicitadas());
+	    }
 
 	    return solicitacaoRepository.save(selecionado);
 	}
