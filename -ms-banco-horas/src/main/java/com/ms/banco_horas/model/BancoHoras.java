@@ -1,11 +1,12 @@
 package com.ms.banco_horas.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.time.LocalDate;
 import java.util.List;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,7 +36,8 @@ public class BancoHoras {
 	@Column(name = "usuario_cod", nullable=false)
     private Long usuarioCod;
 	
-	@OneToMany(mappedBy = "bancoHorasCod")
+	@OneToMany(mappedBy = "bancoHorasCod", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
 	private List<HistoricoCompensacao> historicoCompensacoes;
 	
 	@Transient

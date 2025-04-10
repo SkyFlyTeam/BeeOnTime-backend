@@ -31,16 +31,26 @@ public class BancoHorasService {
 	}
 	
 	public List<BancoHoras> findAllByUsuario(long usuarioCod) {
-		List<BancoHoras> bancoHoras = repository.findAll();
-		for (BancoHoras bancoHora : bancoHoras) {
-			adicionarUsuarioInformacao(bancoHora);
-		}
-		List<BancoHoras> bancoHorasUsuario = bancoHoras.stream()
-				.filter(bancoHora -> bancoHora.getUsuarioCod() == usuarioCod)
-				.collect(Collectors.toList());
-		if (bancoHorasUsuario != null) {
-			return bancoHorasUsuario;
-		}
+		String usuarioUrl = URL_SERVICO_USUARIO + usuarioCod;
+		try {
+			UsuarioDTO usuario = restTemplate.getForObject(usuarioUrl, UsuarioDTO.class);
+			if (usuario != null) {
+				List<BancoHoras> bancoHoras = repository.findAll();
+				for (BancoHoras bancoHora : bancoHoras) {
+					adicionarUsuarioInformacao(bancoHora);
+				}
+				List<BancoHoras> bancoHorasUsuario = bancoHoras.stream()
+						.filter(bancoHora -> bancoHora.getUsuarioCod() == usuarioCod)
+						.collect(Collectors.toList());
+				if (bancoHorasUsuario != null) {
+					return bancoHorasUsuario;
+				} 
+			}
+		} catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
+	        System.err.println("Usuário com ID " + usuarioCod + " não encontrado.");
+	    } catch (Exception e) {
+	        System.err.println("Erro ao buscar usuário com ID " + usuarioCod + ": " + e.getMessage());
+	    }
 		return null;
 	}
 	
@@ -51,7 +61,20 @@ public class BancoHorasService {
 	}
 	
 	public BancoHoras save(BancoHoras bancoHoras) {
-		return repository.save(bancoHoras);
+	    String usuarioUrl = URL_SERVICO_USUARIO + bancoHoras.getUsuarioCod();
+	    try {
+	        UsuarioDTO usuario = restTemplate.getForObject(usuarioUrl, UsuarioDTO.class);
+	        if (usuario != null) {
+	            return repository.save(bancoHoras);
+	        } else {
+	            System.err.println("Usuário com ID " + bancoHoras.getUsuarioCod() + " não encontrado.");
+	        }
+	    } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
+	        System.err.println("Usuário com ID " + bancoHoras.getUsuarioCod() + " não encontrado.");
+	    } catch (Exception e) {
+	        System.err.println("Erro ao buscar usuário com ID " + bancoHoras.getUsuarioCod() + ": " + e.getMessage());
+	    }
+	    return null; 
 	}
 	
 	public BancoHoras edit(BancoHoras bancoHoras) {

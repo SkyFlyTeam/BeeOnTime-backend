@@ -38,7 +38,12 @@ public class ExtrasPagasController {
 	@GetMapping("/usuario/{usuarioCod}")
 	private ResponseEntity<?> findByUsuario(@PathVariable long usuarioCod){
 		 List<ExtrasPagas> extras = service.findAllByUsuario(usuarioCod);
-		 return new ResponseEntity<>(extras, HttpStatus.OK);
+		 if(extras != null && !extras.isEmpty()) {
+			 return new ResponseEntity<>(extras, HttpStatus.OK);
+		 } else {
+			 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		 }
+		 
 	}
 	
 	@GetMapping("/{id}")
@@ -56,8 +61,12 @@ public class ExtrasPagasController {
 			return new ResponseEntity<ExtrasPagas>(HttpStatus.BAD_REQUEST);
 		}
 		
-		service.save(extrasPagas);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		ExtrasPagas extras = service.save(extrasPagas);
+		if(extras != null) {
+			return new ResponseEntity<>(HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
 	}
 	
 	@DeleteMapping("/deletar")

@@ -36,19 +36,29 @@ public class BancoHorasController {
 	}
 	
 	@GetMapping("/usuario/{usuarioCod}")
-	private List<BancoHoras> findAllByUsuario(@PathVariable long usuarioCod) {
-		return service.findAllByUsuario(usuarioCod);
+	private ResponseEntity<?> findAllByUsuario(@PathVariable long usuarioCod) {
+		List<BancoHoras> bancoHoras = service.findAllByUsuario(usuarioCod);
+		if (bancoHoras != null && !bancoHoras.isEmpty()) {
+			return new ResponseEntity<>(bancoHoras, HttpStatus.FOUND);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+		}
 	}
 	
 	@PostMapping("/cadastrar")
 	private ResponseEntity<?> save(@RequestBody BancoHoras bancoHoras) {
-		if (bancoHoras.getBancoHorasSaldoAtual() == null || bancoHoras.getUsuarioCod() == null) {
-			return new ResponseEntity<BancoHoras>(HttpStatus.BAD_REQUEST);
-		}
-		
-		service.save(bancoHoras);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+	    if (bancoHoras.getBancoHorasSaldoAtual() == null || bancoHoras.getUsuarioCod() == null) {
+	        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	    }
+
+	    BancoHoras savedBancoHoras = service.save(bancoHoras);
+	    if (savedBancoHoras != null) {
+	        return new ResponseEntity<>(HttpStatus.CREATED); 
+	    } else {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+	    }
 	}
+
 	
 	@DeleteMapping("/deletar")
 	private void delete(@RequestBody BancoHoras bancoHoras) {

@@ -1,5 +1,6 @@
 package com.ms.banco_horas.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
@@ -31,6 +32,7 @@ public class HistoricoCompensacao {
 	
 	@ManyToOne
     @JoinColumn(name = "bancoHorasCod", nullable = false) 
+	@JsonBackReference
 	private BancoHoras bancoHorasCod;
 
 	public long getHistCompensacaoCod() {

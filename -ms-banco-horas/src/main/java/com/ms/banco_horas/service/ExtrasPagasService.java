@@ -55,7 +55,20 @@ public class ExtrasPagasService {
 	}
 	
 	public ExtrasPagas save(ExtrasPagas extraPaga) {
-		return repository.save(extraPaga);
+		String usuarioUrl = URL_SERVICO_USUARIO + extraPaga.getUsuarioCod();
+		try {
+	        UsuarioDTO usuario = restTemplate.getForObject(usuarioUrl, UsuarioDTO.class);
+	        if (usuario != null) {
+	            return repository.save(extraPaga);
+	        } else {
+	            System.err.println("Usuário com ID " + extraPaga.getUsuarioCod() + " não encontrado.");
+	        }
+	    } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
+	        System.err.println("Usuário com ID " + extraPaga.getUsuarioCod() + " não encontrado.");
+	    } catch (Exception e) {
+	        System.err.println("Erro ao buscar usuário com ID " + extraPaga.getUsuarioCod() + ": " + e.getMessage());
+	    }
+	    return null;
 	}
 	
 	public void delete(ExtrasPagas extraPaga) {
