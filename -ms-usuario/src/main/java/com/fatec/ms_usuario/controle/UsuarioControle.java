@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fatec.ms_usuario.dto.ApiResponse;
 import com.fatec.ms_usuario.dto.UsuarioDTO;
 import com.fatec.ms_usuario.entidade.Empresa;
 import com.fatec.ms_usuario.entidade.Jornada;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -54,6 +56,21 @@ public class UsuarioControle {
 		return new ResponseEntity<>(usuarios, HttpStatus.OK);
 	}
 
+    @GetMapping("/checkCpfExists")
+    public ResponseEntity<ApiResponse> checkCpfExists(@RequestParam String cpf) {
+        Optional<Usuario> usuario = repositorio.findByUsuarioCpf(cpf);
+        boolean exists = usuario.isPresent();
+        return ResponseEntity.ok(new ApiResponse(exists));  // Retorna { exists: true/false }
+    }
+
+    // Endpoint para verificar se o número de registro já existe
+    @GetMapping("/checkRegistroExists")
+    public ResponseEntity<ApiResponse> checkRegistroExists(@RequestParam Double nrRegistro) {
+        Optional<Usuario> usuario = repositorio.findByUsuarioNrRegistro(nrRegistro);
+        boolean exists = usuario.isPresent();
+        return ResponseEntity.ok(new ApiResponse(exists));  // Retorna { exists: true/false }
+}
+
 
     @PostMapping("/cadastrar")
     public ResponseEntity<?> cadastrarUsuario(@RequestBody UsuarioDTO novoDTO) {
@@ -73,7 +90,7 @@ public class UsuarioControle {
         Usuario novoUsuario = new Usuario();
         novoUsuario.setUsuario_nome(novoDTO.getUsuario_nome());
         novoUsuario.setUsuario_cpf(novoDTO.getUsuario_cpf());
-        novoUsuario.setUsuario_nrRegistro(novoDTO.getUsuario_nrRegistro());
+        novoUsuario.setUsuarioNrRegistro(Double.parseDouble(novoDTO.getUsuario_nrRegistro()));
         novoUsuario.setUsuario_cargaHoraria(novoDTO.getUsuario_cargaHoraria());
         novoUsuario.setUsuarioTipoContratacao(novoDTO.getUsuarioTipoContratacao());
         novoUsuario.setUsuario_dataContratacao(novoDTO.getUsuario_dataContratacao());

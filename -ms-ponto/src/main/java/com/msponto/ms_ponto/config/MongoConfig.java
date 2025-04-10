@@ -19,6 +19,7 @@ public class MongoConfig extends AbstractMongoClientConfiguration {
     @Override
     public MongoClient mongoClient() {
         return MongoClients.create("mongodb+srv://admin:skyfly#2024@beeontime.c2sgf.mongodb.net/?retryWrites=true&w=majority&appName=BeeOnTime");
+        // return MongoClients.create("mongodb+srv://salerno:salerno@beeontime.bsrnd1l.mongodb.net/?retryWrites=true&w=majority&appName=BeeOnTime");
     }
 }
 

@@ -32,11 +32,11 @@ public class Usuario {
 	@Column
 	private String usuario_nome;
 
-	@Column
-	private String usuario_cpf;
+	@Column(name = "usuario_cpf", unique = true)
+	private String usuarioCpf;
 	
-	@Column
-	private Double usuario_nrRegistro;
+	@Column(name = "usuario_nrRegistro", unique = true)
+	private Double usuarioNrRegistro;
 	
 	@Column
 	private Integer usuario_cargaHoraria;
