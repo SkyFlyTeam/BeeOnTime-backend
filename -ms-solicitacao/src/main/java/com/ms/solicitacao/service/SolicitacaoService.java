@@ -4,6 +4,7 @@ import com.ms.solicitacao.dto.UsuarioDTO;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,34 @@ public class SolicitacaoService {
             adicionarUsuarioInformacao(solicitacao);
         }
         return solicitacoes;
+    }
+    
+    public List<Solicitacao> findAllByUsuario(long usuarioId) {
+    	List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
+    	for (Solicitacao solicitacao : solicitacoes) {
+            adicionarUsuarioInformacao(solicitacao);
+        }
+    	List<Solicitacao> solicitacoesUsuario = solicitacoes.stream()
+    			.filter(solicitacao -> solicitacao.getUsuarioCod() == usuarioId)
+    			.collect(Collectors.toList());
+    	if (solicitacoesUsuario != null) {
+    		return solicitacoesUsuario;
+    	}
+    	return null;
+    }
+    
+    public List<Solicitacao> findAllBySetor(long setorCod) {
+    	List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
+    	for (Solicitacao solicitacao : solicitacoes) {
+            adicionarUsuarioInformacao(solicitacao);
+        }
+    	List<Solicitacao> solicitacoesSetor = solicitacoes.stream()
+    			.filter(solicitacao -> solicitacao.getSetorCod() == setorCod)
+    			.collect(Collectors.toList());
+    	if (solicitacoesSetor != null) {
+    		return solicitacoesSetor;
+    	}
+    	return null;
     }
 
     public Solicitacao findById(long id) {
@@ -86,6 +115,8 @@ public class SolicitacaoService {
 	            if (usuario != null) {
 	                solicitacao.setUsuarioNome(usuario.getUsuario_nome());
 	                solicitacao.setUsuarioCargo(usuario.getUsuario_cargo());
+	                solicitacao.setNivelAcesso_cod(usuario.getNivelAcesso_cod());
+	                solicitacao.setSetorCod(usuario.getSetorCod());
 	            }
 	        } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
 	            System.err.println("Usuário com ID " + solicitacao.getUsuarioCod() + " não encontrado.");
