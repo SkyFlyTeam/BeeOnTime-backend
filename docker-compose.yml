@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: botusuario
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql  # Mount SQL script
+    networks:
+      - bot-network
+
+  ms-usuario:
+    build:
+      context: ./-ms-usuario
+    container_name: ms-usuario
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/botusuario
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+    networks:
+      - bot-network
+
+  ms-ponto:
+    build:
+      context: ./-ms-ponto
+    container_name: ms-ponto
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/BOTPonto
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+    network_mode: "host"
+
+  ms-solicitacao:
+    build:
+      context: ./-ms-solicitacao
+    container_name: ms-solicitacao
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/botsolicitacoes
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8083:8083"
+    depends_on:
+      - mysql
+    networks:
+      - bot-network
+
+volumes:
+  mysql_data:
+
+networks:
+  bot-network:
+    driver: bridge

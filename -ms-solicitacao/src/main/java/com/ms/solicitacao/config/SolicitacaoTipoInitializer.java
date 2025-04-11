@@ -1,13 +1,14 @@
 package com.ms.solicitacao.config;
 
-import com.ms.solicitacao.model.SolicitacaoTipo;
-import com.ms.solicitacao.repository.SolicitacaoTipoRepository;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
-import java.util.List;
+import com.ms.solicitacao.model.SolicitacaoTipo;
+import com.ms.solicitacao.repository.SolicitacaoTipoRepository;
 
 @Configuration
 public class SolicitacaoTipoInitializer {
@@ -25,7 +26,7 @@ public class SolicitacaoTipoInitializer {
 
             tipos.forEach(tipoNome -> {
                 if (!repository.existsByTipoSolicitacaoNome(tipoNome)) {
-                    repository.save(new SolicitacaoTipo(0, tipoNome));
+                    repository.save(new SolicitacaoTipo(tipoNome));
                 }
             });
         };
