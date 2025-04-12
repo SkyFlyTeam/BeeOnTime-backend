@@ -35,6 +35,9 @@ public class Solicitacao {
     
     @Column(name = "usuario_cod")
     private long usuarioCod;
+    
+    @Column(name = "horas_solicitadas", nullable = true)
+    private Double horasSolicitadas;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "solicitacao_status")
@@ -159,6 +162,17 @@ public class Solicitacao {
 	public void setNivelAcesso_cod(int nivelAcesso_cod) {
 		this.nivelAcesso_cod = nivelAcesso_cod;
 	}
+
+	public Double getHorasSolicitadas() {
+		return horasSolicitadas;
+	}
+
+	public void setHorasSolicitadas(Double horasSolicitadas) {
+		this.horasSolicitadas = horasSolicitadas;
+	}
+	
+	
+	
 
 }
 
