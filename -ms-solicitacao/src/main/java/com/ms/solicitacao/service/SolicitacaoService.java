@@ -101,7 +101,11 @@ public class SolicitacaoService {
 	    if (solicitacao.getHorasSolicitadas() != null) {
 	    	selecionado.setHorasSolicitadas(solicitacao.getHorasSolicitadas());
 	    }
-
+	    
+	    if (solicitacao.getSolicitacaoDataPeriodo() != null) {
+	    	selecionado.setSolicitacaoDataPeriodo(solicitacao.getSolicitacaoDataPeriodo());
+	    }
+	    
 	    return solicitacaoRepository.save(selecionado);
 	}
 

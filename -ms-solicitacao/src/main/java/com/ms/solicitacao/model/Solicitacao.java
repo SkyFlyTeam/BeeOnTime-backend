@@ -30,7 +30,7 @@ public class Solicitacao {
     @Column(name = "solicitacao_devolutiva", length = 120)
     private String solicitacaoDevolutiva;
 
-    @Column(name = "solicitacao_dataPeriodo", nullable = false, updatable = false)
+    @Column(name = "solicitacao_dataPeriodo", nullable = false)
     private LocalDate solicitacaoDataPeriodo = LocalDate.now();
     
     @Column(name = "usuario_cod")

@@ -42,7 +42,7 @@ public class HorasServico {
         if (usuario_horas.isEmpty()) {
             return null;
         }
-    
+        
         return usuario_horas.get(0);
     }
 
