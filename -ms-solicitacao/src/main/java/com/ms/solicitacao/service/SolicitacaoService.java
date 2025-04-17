@@ -1,5 +1,7 @@
 package com.ms.solicitacao.service;
 
+import com.ms.solicitacao.dto.HorasDTO;
+import com.ms.solicitacao.dto.SolicitacaoTipoDTO;
 import com.ms.solicitacao.dto.UsuarioDTO;
 
 import java.util.List;
@@ -7,11 +9,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.ms.solicitacao.dto.UsuarioDTO;
 import com.ms.solicitacao.model.Solicitacao;
+import com.ms.solicitacao.model.SolicitacaoStatus;
 import com.ms.solicitacao.model.SolicitacaoTipo;
 import com.ms.solicitacao.repository.SolicitacaoRepository;
 import com.ms.solicitacao.repository.SolicitacaoTipoRepository;
@@ -29,6 +36,8 @@ public class SolicitacaoService {
     private RestTemplate restTemplate;
 
     private static final String URL_SERVICO_USUARIO = "http://localhost:8081/usuario/";  
+    
+    private static final String URL_SERVICO_HORAS = "http://localhost:8082/horas/"; 
 
     public List<Solicitacao> findAll() {
         List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
@@ -51,6 +60,7 @@ public class SolicitacaoService {
     	}
     	return null;
     }
+    
     
     public List<Solicitacao> findAllBySetor(long setorCod) {
     	List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
@@ -84,6 +94,40 @@ public class SolicitacaoService {
 	    Solicitacao selecionado = solicitacaoRepository.findById(solicitacao.getSolicitacaoCod())
 	        .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
 
+	    if (solicitacao.getSolicitacaoStatus() == SolicitacaoStatus.RECUSADA) {
+	        System.out.println("Status da solicitação é RECUSADA, atualizando horas...");
+
+	        String dataFormatada = solicitacao.getSolicitacaoDataPeriodo().toString();
+	        String horasUrl = URL_SERVICO_HORAS + "usuario/" + solicitacao.getUsuarioCod() + "/dia?data=" + dataFormatada;
+	        System.out.println("URL de consulta: " + horasUrl);  
+
+	        try {
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.setContentType(MediaType.APPLICATION_JSON);  
+
+	            HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+	            HorasDTO horas = restTemplate.exchange(horasUrl, HttpMethod.POST, entity, HorasDTO.class).getBody();
+	            if (horas != null) {
+	                System.out.println("Horas recuperadas: " + horas);
+
+	                horas.setHorasExtras(0f);
+	                String horasUrlAtualizar = URL_SERVICO_HORAS + "atualizar";
+	                System.out.println("URL de atualização: " + horasUrlAtualizar);
+
+	                HttpEntity<HorasDTO> requestEntity = new HttpEntity<>(horas, headers);
+	                restTemplate.exchange(horasUrlAtualizar, HttpMethod.PUT, requestEntity, HorasDTO.class);
+
+	            } else {
+	                System.err.println("Horas não encontradas para o usuário.");
+	            }
+	        } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
+	            System.err.println("Usuário com ID " + solicitacao.getUsuarioCod() + " não encontrado.");
+	        } catch (Exception e) {
+	            System.err.println("Erro ao buscar usuário com ID " + solicitacao.getUsuarioCod() + ": " + e.getMessage());
+	        }
+	    }
+
 	    if (solicitacao.getSolicitacaoDevolutiva() != null) {
 	        selecionado.setSolicitacaoDevolutiva(solicitacao.getSolicitacaoDevolutiva());
 	    }
@@ -97,15 +141,15 @@ public class SolicitacaoService {
 	    if (solicitacao.getSolicitacaoMensagem() != null) {
 	        selecionado.setSolicitacaoMensagem(solicitacao.getSolicitacaoMensagem());
 	    }
-	    
+
 	    if (solicitacao.getHorasSolicitadas() != null) {
-	    	selecionado.setHorasSolicitadas(solicitacao.getHorasSolicitadas());
+	        selecionado.setHorasSolicitadas(solicitacao.getHorasSolicitadas());
 	    }
-	    
+
 	    if (solicitacao.getSolicitacaoDataPeriodo() != null) {
-	    	selecionado.setSolicitacaoDataPeriodo(solicitacao.getSolicitacaoDataPeriodo());
+	        selecionado.setSolicitacaoDataPeriodo(solicitacao.getSolicitacaoDataPeriodo());
 	    }
-	    
+
 	    return solicitacaoRepository.save(selecionado);
 	}
 

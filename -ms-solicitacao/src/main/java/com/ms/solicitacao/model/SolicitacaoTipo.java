@@ -11,16 +11,16 @@ public class SolicitacaoTipo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long tipoSolicitacaoCod;
+    private Long tipoSolicitacaoCod;
 
     @Column(length = 50, nullable = false)
     private String tipoSolicitacaoNome;
 
-	public long getTipoSolicitacaoCod() {
+	public Long getTipoSolicitacaoCod() {
 		return tipoSolicitacaoCod;
 	}
 
-	public void setTipoSolicitacaoCod(long tipoSolicitacaoCod) {
+	public void setTipoSolicitacaoCod(Long tipoSolicitacaoCod) {
 		this.tipoSolicitacaoCod = tipoSolicitacaoCod;
 	}
 

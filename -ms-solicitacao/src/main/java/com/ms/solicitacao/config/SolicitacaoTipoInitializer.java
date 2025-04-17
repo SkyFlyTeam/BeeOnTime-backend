@@ -25,7 +25,7 @@ public class SolicitacaoTipoInitializer {
 
             tipos.forEach(tipoNome -> {
                 if (!repository.existsByTipoSolicitacaoNome(tipoNome)) {
-                    repository.save(new SolicitacaoTipo(0, tipoNome));
+                    repository.save(new SolicitacaoTipo(null, tipoNome));
                 }
             });
         };
