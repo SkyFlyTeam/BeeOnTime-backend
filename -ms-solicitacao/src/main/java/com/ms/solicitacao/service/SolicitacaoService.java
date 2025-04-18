@@ -94,7 +94,9 @@ public class SolicitacaoService {
 	    Solicitacao selecionado = solicitacaoRepository.findById(solicitacao.getSolicitacaoCod())
 	        .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
 
-	    if (solicitacao.getSolicitacaoStatus() == SolicitacaoStatus.RECUSADA) {
+	    if (solicitacao.getSolicitacaoStatus() == SolicitacaoStatus.RECUSADA &&
+	    	    solicitacao.getTipoSolicitacaoCod() != null &&
+	    	    solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod() == 5) {
 	        System.out.println("Status da solicitação é RECUSADA, atualizando horas...");
 
 	        String dataFormatada = solicitacao.getSolicitacaoDataPeriodo().toString();
