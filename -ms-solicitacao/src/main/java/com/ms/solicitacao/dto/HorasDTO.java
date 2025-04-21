@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 public class HorasDTO {
     private Long horasCod;
-    private Float horasExtras;
+    private Double horasExtras;
     private Float horasTrabalhadas;
     private Float horasNoturnas;
     private Float horasFaltantes;
@@ -18,10 +18,10 @@ public class HorasDTO {
 	public void setHorasCod(Long horasCod) {
 		this.horasCod = horasCod;
 	}
-	public Float getHorasExtras() {
+	public Double getHorasExtras() {
 		return horasExtras;
 	}
-	public void setHorasExtras(Float horasExtras) {
+	public void setHorasExtras(Double horasExtras) {
 		this.horasExtras = horasExtras;
 	}
 	public Float getHorasTrabalhadas() {

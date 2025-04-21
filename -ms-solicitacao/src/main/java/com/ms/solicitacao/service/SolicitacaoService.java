@@ -87,6 +87,36 @@ public class SolicitacaoService {
 	        Optional<SolicitacaoTipo> tipo = solicitacaoTipoRepository.findById(solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod());
 	        tipo.ifPresent(tipoSolicitacao -> solicitacao.setTipoSolicitacaoCod(tipoSolicitacao));
 	    }
+	    
+	    String dataFormatada = solicitacao.getSolicitacaoDataPeriodo().toString();
+        String horasUrl = URL_SERVICO_HORAS + "usuario/" + solicitacao.getUsuarioCod() + "/dia?data=" + dataFormatada;
+        
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);  
+
+            HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+            HorasDTO horas = restTemplate.exchange(horasUrl, HttpMethod.POST, entity, HorasDTO.class).getBody();
+            if (horas != null) {
+                System.out.println("Horas recuperadas: " + horas);
+
+                horas.setHorasExtras(solicitacao.getHorasSolicitadas());
+                String horasUrlAtualizar = URL_SERVICO_HORAS + "atualizar";
+                System.out.println("URL de atualização: " + horasUrlAtualizar);
+
+                HttpEntity<HorasDTO> requestEntity = new HttpEntity<>(horas, headers);
+                restTemplate.exchange(horasUrlAtualizar, HttpMethod.PUT, requestEntity, HorasDTO.class);
+
+            } else {
+                System.err.println("Horas não encontradas para o usuário.");
+            }
+        } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
+            System.err.println("Usuário com ID " + solicitacao.getUsuarioCod() + " não encontrado.");
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar usuário com ID " + solicitacao.getUsuarioCod() + ": " + e.getMessage());
+        }
+	    
 	    return solicitacaoRepository.save(solicitacao);
 	}
 	
@@ -113,7 +143,7 @@ public class SolicitacaoService {
 	            if (horas != null) {
 	                System.out.println("Horas recuperadas: " + horas);
 
-	                horas.setHorasExtras(0f);
+	                horas.setHorasExtras(0.0);
 	                String horasUrlAtualizar = URL_SERVICO_HORAS + "atualizar";
 	                System.out.println("URL de atualização: " + horasUrlAtualizar);
 
