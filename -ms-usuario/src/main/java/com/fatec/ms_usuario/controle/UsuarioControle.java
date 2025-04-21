@@ -116,7 +116,6 @@ public class UsuarioControle {
   		}
     }
     
-    
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizarUsuario(@RequestBody Usuario usuario) {
         Optional<Usuario> usuarioOptional = repositorio.findById(usuario.getUsuario_cod());
