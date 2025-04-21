@@ -1,7 +1,6 @@
 package com.ms.banco_horas.service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,6 +51,9 @@ public class RelatorioService {
 			List<RelatorioMensalDTO> relatoriosMensais = new ArrayList<>();
 
 			for (UsuarioDTO usuario : usuarios) {
+				if(usuario.getNivelAcesso_cod() == 0){
+					continue; 
+				}
 				RelatorioMensalDTO relatorioMensal = gerarRelatorioMensalUsuario(usuario, data);
 				relatoriosMensais.add(relatorioMensal);
 			}

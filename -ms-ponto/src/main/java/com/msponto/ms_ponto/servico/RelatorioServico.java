@@ -30,6 +30,9 @@ public class RelatorioServico {
         List<RelatorioHorasDTO> relatoriosMensais = new ArrayList<>();
 
         for (UsuarioDTO usuario : usuarios) {
+            if(usuario.getNivelAcesso().getNivelAcesso_cod() == 0){
+                continue; 
+            }
             Float[] horasRelatorio = getHorasTotalAndDescontoByUsuario(usuario.getUsuario_cod(), data);
             RelatorioHorasDTO relatorioMensal = new RelatorioHorasDTO();
             relatorioMensal.setUsuarioCod(usuario.getUsuario_cod());
