@@ -86,6 +86,11 @@ public class Usuario {
 	@Column(name = "nivelacesso_cod")
 	private Long nivelAcesso_cod;
 	
+	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+	private List<Folga> folgas;
+	@Column(name = "folCod")
+	private Long folCod;
+	
 	public Empresa getEmpresa() {
 		return empresa;
 	}
@@ -230,6 +235,22 @@ public class Usuario {
 	}
 	public void setNivelAcesso_cod(Long nivelAcesso_cod){
 		this.nivelAcesso_cod = nivelAcesso_cod;
+	}
+
+	public List<Folga> getFolgas() {
+		return folgas;
+	}
+
+	public void setFolgas(List<Folga> folgas) {
+		this.folgas = folgas;
+	}
+
+	public Long getFolCod() {
+		return folCod;
+	}
+
+	public void setFolCod(Long folCod) {
+		this.folCod = folCod;
 	}
 
 }
