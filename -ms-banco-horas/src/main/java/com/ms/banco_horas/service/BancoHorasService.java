@@ -8,7 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.ms.banco_horas.model.BancoHoras;
+import com.ms.banco_horas.model.HistoricoCompensacao;
+import com.ms.banco_horas.model.TipoCompensacao;
 import com.ms.banco_horas.repository.BancoHorasRepository;
+import com.ms.banco_horas.repository.HistoricoCompensacaoRepository;
+import com.ms.banco_horas.repository.TipoCompensacaoRepository;
 import com.ms.banco_horas.dto.UsuarioDTO;
 
 @Service
@@ -16,6 +20,12 @@ public class BancoHorasService {
 	
 	@Autowired
 	public BancoHorasRepository repository;
+	
+	@Autowired
+	public HistoricoCompensacaoRepository historicoRepository;
+	
+	@Autowired
+	private TipoCompensacaoRepository tipoCompensacaoRepository;
 	
 	@Autowired
     private RestTemplate restTemplate;
@@ -62,19 +72,47 @@ public class BancoHorasService {
 	
 	public BancoHoras save(BancoHoras bancoHoras) {
 	    String usuarioUrl = URL_SERVICO_USUARIO + bancoHoras.getUsuarioCod();
+
 	    try {
 	        UsuarioDTO usuario = restTemplate.getForObject(usuarioUrl, UsuarioDTO.class);
+
 	        if (usuario != null) {
+	            BancoHoras bancoHorasExistente = repository
+	                    .findByUsuarioCod(bancoHoras.getUsuarioCod());
+
+	            if (bancoHorasExistente != null) {
+	                bancoHorasExistente.setBancoHorasSaldoAtual(
+	                        bancoHorasExistente.getBancoHorasSaldoAtual() + bancoHoras.getBancoHorasSaldoAtual()
+	                );
+
+	                HistoricoCompensacao historico = new HistoricoCompensacao();
+	                historico.setHistCompensacaoTotal(bancoHoras.getBancoHorasSaldoAtual());
+
+	                TipoCompensacao tipo = tipoCompensacaoRepository.findById(1L).orElse(null);
+	                if (tipo == null) {
+	                    throw new RuntimeException("Tipo de compensação 1 (Acréscimo) não encontrado.");
+	                }
+
+	                historico.setTipoCompensacaoCod(tipo);
+	                historico.setBancoHorasCod(bancoHorasExistente);
+
+	                bancoHorasExistente.getHistoricoCompensacoes().add(historico);
+
+	                return repository.save(bancoHorasExistente);
+	            }
+
 	            return repository.save(bancoHoras);
 	        } else {
 	            System.err.println("Usuário com ID " + bancoHoras.getUsuarioCod() + " não encontrado.");
 	        }
+
 	    } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
 	        System.err.println("Usuário com ID " + bancoHoras.getUsuarioCod() + " não encontrado.");
 	    } catch (Exception e) {
 	        System.err.println("Erro ao buscar usuário com ID " + bancoHoras.getUsuarioCod() + ": " + e.getMessage());
 	    }
-	    return null; 
+
+	    return null;
 	}
 	
 	public BancoHoras edit(BancoHoras bancoHoras) {
