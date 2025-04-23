@@ -87,6 +87,7 @@ public class Usuario {
 	private Long nivelAcesso_cod;
 	
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+	@JsonIgnore
 	private List<Folga> folgas;
 	@Column(name = "folCod")
 	private Long folCod;

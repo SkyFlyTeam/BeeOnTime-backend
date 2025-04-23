@@ -9,7 +9,9 @@ public class WebClientConfig {
 
     @Bean
     public WebClient.Builder webClientBuilder() {
-        return WebClient.builder();
-    }
+        return WebClient.builder()
+            .baseUrl("http://localhost:8082")
+            .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(10 * 1024 * 1024));
+        }
 }
 

@@ -26,9 +26,9 @@ public class MySqlConfig {
     @Bean
     public DataSource dataSource(){
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-            dataSourceBuilder.url("jdbc:mysql://localhost:3306/BOTPonto");
+            dataSourceBuilder.url("jdbc:mysql://localhost:3308/BOTPonto");
             dataSourceBuilder.username("root");
-            dataSourceBuilder.password("root");
+            dataSourceBuilder.password("salerno");
             return dataSourceBuilder.build();
     }
 
