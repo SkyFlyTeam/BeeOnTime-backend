@@ -1,5 +1,6 @@
 package com.ms.banco_horas.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,24 @@ public class BancoHorasController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
 	}
+
+	@GetMapping("/usuario/{usuarioCod}/data/{data}")
+	private ResponseEntity<?> findByDateAndUsuario(@PathVariable Long usuarioCod, @PathVariable LocalDate data){
+		BancoHoras banco = service.findByDateAndUsuarioCod(data, usuarioCod);
+		if(banco == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(banco, HttpStatus.OK);
+	}
+
+	@GetMapping("/saldoAtual/usuario/{usuarioCod}/data/{data}")
+	private ResponseEntity<?> findSaldoAtual(@PathVariable Long usuarioCod, @PathVariable LocalDate data){
+		BancoHoras banco = service.findMostRecentByDateAndUsuarioCod(usuarioCod, data);
+		if(banco == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(banco, HttpStatus.OK);
+	}
 	
 	@PostMapping("/cadastrar")
 	private ResponseEntity<?> save(@RequestBody BancoHoras bancoHoras) {
@@ -53,7 +72,7 @@ public class BancoHorasController {
 
 	    BancoHoras savedBancoHoras = service.save(bancoHoras);
 	    if (savedBancoHoras != null) {
-	        return new ResponseEntity<>(HttpStatus.CREATED); 
+	        return new ResponseEntity<>(savedBancoHoras, HttpStatus.CREATED); 
 	    } else {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 	    }

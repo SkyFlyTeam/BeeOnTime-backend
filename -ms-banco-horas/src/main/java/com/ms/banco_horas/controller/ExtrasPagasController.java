@@ -1,5 +1,6 @@
 package com.ms.banco_horas.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ms.banco_horas.model.BancoHoras;
 import com.ms.banco_horas.model.ExtrasPagas;
 import com.ms.banco_horas.service.ExtrasPagasService;
 
@@ -49,6 +49,24 @@ public class ExtrasPagasController {
 	@GetMapping("/{id}")
 	private ResponseEntity<?> findById(@PathVariable long id){
 		ExtrasPagas extra = service.findById(id);
+		if(extra == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(extra, HttpStatus.OK);
+	}
+
+	@GetMapping("/usuario/{usuarioCod}/data/{data}")
+	private ResponseEntity<?> findByDateAndUsuario(@PathVariable Long usuarioCod, @PathVariable LocalDate data){
+		ExtrasPagas extra = service.findByDateAndUsuarioCod(usuarioCod, data);
+		if(extra == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(extra, HttpStatus.OK);
+	}
+
+	@GetMapping("/saldoAtual/usuario/{usuarioCod}/data/{data}")
+	private ResponseEntity<?> findSaldoAtual(@PathVariable Long usuarioCod, @PathVariable LocalDate data){
+		ExtrasPagas extra = service.findMostRecentByDateAndUsuarioCod(usuarioCod, data);
 		if(extra == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
