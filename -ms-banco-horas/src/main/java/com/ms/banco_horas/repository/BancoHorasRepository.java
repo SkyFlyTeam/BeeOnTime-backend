@@ -1,5 +1,6 @@
 package com.ms.banco_horas.repository;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,5 @@ import com.ms.banco_horas.model.BancoHoras;
 @Repository
 public interface BancoHorasRepository extends JpaRepository<BancoHoras, Long> {
 	BancoHoras findByUsuarioCod(Long usuarioCod);
+	BancoHoras findByUsuarioCodAndBancoHorasData(Long usuarioCod, LocalDate bancoHorasData);
 }

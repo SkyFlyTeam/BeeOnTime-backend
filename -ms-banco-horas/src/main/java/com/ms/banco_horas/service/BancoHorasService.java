@@ -77,14 +77,12 @@ public class BancoHorasService {
 	        UsuarioDTO usuario = restTemplate.getForObject(usuarioUrl, UsuarioDTO.class);
 
 	        if (usuario != null) {
-	            BancoHoras bancoHorasExistente = repository
-	                    .findByUsuarioCod(bancoHoras.getUsuarioCod());
+	            BancoHoras bancoHorasExistente = repository.findByUsuarioCodAndBancoHorasData(bancoHoras.getUsuarioCod(), bancoHoras.getBancoHorasData());
 
 	            if (bancoHorasExistente != null) {
 	                bancoHorasExistente.setBancoHorasSaldoAtual(
 	                        bancoHorasExistente.getBancoHorasSaldoAtual() + bancoHoras.getBancoHorasSaldoAtual()
 	                );
-
 	                HistoricoCompensacao historico = new HistoricoCompensacao();
 	                historico.setHistCompensacaoTotal(bancoHoras.getBancoHorasSaldoAtual());
 
@@ -99,9 +97,9 @@ public class BancoHorasService {
 	                bancoHorasExistente.getHistoricoCompensacoes().add(historico);
 
 	                return repository.save(bancoHorasExistente);
+	            } else {
+	                return repository.save(bancoHoras);
 	            }
-
-	            return repository.save(bancoHoras);
 	        } else {
 	            System.err.println("Usuário com ID " + bancoHoras.getUsuarioCod() + " não encontrado.");
 	        }
@@ -114,6 +112,7 @@ public class BancoHorasService {
 
 	    return null;
 	}
+
 	
 	public BancoHoras edit(BancoHoras bancoHoras) {
 		BancoHoras selecionado = repository.findById(bancoHoras.getBancoHorasCod())
