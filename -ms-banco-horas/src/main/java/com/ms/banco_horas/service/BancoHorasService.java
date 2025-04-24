@@ -118,4 +118,20 @@ public class BancoHorasService {
 	        }
 	    }
 	}
+	// criado para retornar as horas disponíveis do usuário
+	public Integer findHorasDisponiveisByUsuario(long usuarioCod) {
+		List<BancoHoras> bancoHoras = findAllByUsuario(usuarioCod);
+		int totalHoras = 0;
+	
+		if (bancoHoras != null && !bancoHoras.isEmpty()) {
+			for (BancoHoras bancoHora : bancoHoras) {
+				if (bancoHora.getBancoHorasSaldoAtual() != null) {
+					totalHoras += bancoHora.getBancoHorasSaldoAtual();
+				}
+			}
+		}
+	
+		return totalHoras;
+	}
+	
 }

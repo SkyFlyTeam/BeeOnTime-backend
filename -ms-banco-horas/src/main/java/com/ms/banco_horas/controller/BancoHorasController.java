@@ -44,6 +44,18 @@ public class BancoHorasController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
 		}
 	}
+
+	@GetMapping("/usuario/{usuarioCod}/horas-disponiveis")
+	private ResponseEntity<Integer> findHorasDisponiveisByUsuario(@PathVariable long usuarioCod) {
+		Integer horasDisponiveis = service.findHorasDisponiveisByUsuario(usuarioCod);
+		if (horasDisponiveis != null) {
+			return new ResponseEntity<>(horasDisponiveis, HttpStatus.FOUND);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+
+
 	
 	@PostMapping("/cadastrar")
 	private ResponseEntity<?> save(@RequestBody BancoHoras bancoHoras) {
