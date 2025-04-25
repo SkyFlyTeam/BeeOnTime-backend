@@ -1,5 +1,6 @@
 package com.ms.banco_horas.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.ms.banco_horas.dto.UsuarioDTO;
 import com.ms.banco_horas.model.BancoHoras;
 import com.ms.banco_horas.model.HistoricoCompensacao;
 import com.ms.banco_horas.model.TipoCompensacao;
 import com.ms.banco_horas.repository.BancoHorasRepository;
 import com.ms.banco_horas.repository.HistoricoCompensacaoRepository;
 import com.ms.banco_horas.repository.TipoCompensacaoRepository;
-import com.ms.banco_horas.dto.UsuarioDTO;
 
 @Service
 public class BancoHorasService {
@@ -68,6 +69,24 @@ public class BancoHorasService {
 		BancoHoras bancoHoras = repository.findById(id).orElseThrow(() -> new RuntimeException("Banco de horas não encontrada"));
 		adicionarUsuarioInformacao(bancoHoras);
 		return bancoHoras;
+	}
+
+	public BancoHoras findByDateAndUsuarioCod(LocalDate date, Long usuarioCod){
+		BancoHoras banco = repository.findByUsuarioCodAndBancoHorasData(usuarioCod, date);
+		return banco;
+	}
+
+	public List<BancoHoras> findByPeriodAndUsuarioCod(Long usuarioCod, LocalDate start_date, LocalDate end_date){
+		List<BancoHoras> bancos = repository.findByUsuarioCodAndBancoHorasDataBetween(usuarioCod, start_date, end_date);
+		return bancos;
+	}
+
+	public BancoHoras findMostRecentByDateAndUsuarioCod(Long usuarioCod, LocalDate data) {
+		List<BancoHoras> resultList = repository.findTopByUsuarioCodAndBancoHorasDataLessThanEqualOrderByBancoHorasDataDesc(usuarioCod, data);
+		if (resultList != null && !resultList.isEmpty()) {
+			return resultList.get(0); 
+		}
+		return null;  
 	}
 	
 	public BancoHoras save(BancoHoras bancoHoras) {

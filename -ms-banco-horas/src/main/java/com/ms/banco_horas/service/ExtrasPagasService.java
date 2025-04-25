@@ -1,15 +1,14 @@
 package com.ms.banco_horas.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
 
 import com.ms.banco_horas.dto.UsuarioDTO;
-import com.ms.banco_horas.model.BancoHoras;
 import com.ms.banco_horas.model.ExtrasPagas;
 import com.ms.banco_horas.repository.ExtrasPagasRepositorty;
 
@@ -52,6 +51,20 @@ public class ExtrasPagasService {
 		ExtrasPagas extra = repository.findById(id).orElseThrow(() -> new RuntimeException("Extra paga não encontrada"));
 		adicionarUsuarioInformacao(extra);
 		return extra;
+	}
+
+	public ExtrasPagas findByDateAndUsuarioCod(Long usuarioCod, LocalDate data) {
+		ExtrasPagas result = repository.findByExtrasPagasDataAndUsuarioCod(data, usuarioCod);
+		return result;  
+	}
+
+	public ExtrasPagas findMostRecentByDateAndUsuarioCod(Long usuarioCod, LocalDate data) {
+		List<ExtrasPagas> resultList = repository.findTopByUsuarioCodAndDataLessThanEqualOrderByDataDesc(usuarioCod, data);
+
+		if (resultList != null && !resultList.isEmpty()) {
+			return resultList.get(0); 
+		}
+		return null;  
 	}
 	
 	public ExtrasPagas save(ExtrasPagas extraPaga) {
