@@ -68,8 +68,8 @@ public class ExtrasPagasService {
 	}
 	
 	public ExtrasPagas save(ExtrasPagas extraPaga) {
-		String usuarioUrl = URL_SERVICO_USUARIO + extraPaga.getUsuarioCod();
-		try {
+	    String usuarioUrl = URL_SERVICO_USUARIO + extraPaga.getUsuarioCod();
+	    try {
 	        UsuarioDTO usuario = restTemplate.getForObject(usuarioUrl, UsuarioDTO.class);
 	        if (usuario != null) {
 	            return repository.save(extraPaga);
@@ -83,6 +83,7 @@ public class ExtrasPagasService {
 	    }
 	    return null;
 	}
+
 	
 	public void delete(ExtrasPagas extraPaga) {
 		repository.deleteById(extraPaga.getExtrasPagasCod());
