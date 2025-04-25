@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.msponto.ms_ponto.dto.SolicitacaoDTO;
+import com.msponto.ms_ponto.dto.SolicitacaoTipoDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
 import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos;
 import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos.Ponto;
@@ -15,6 +17,7 @@ import com.msponto.ms_ponto.entidade.mysql.Horas;
 import com.msponto.ms_ponto.enums.TipoPonto;
 import com.msponto.ms_ponto.modelo.HorasAtualizador;
 import com.msponto.ms_ponto.modelo.VerificadorDiaTrabalhado;
+import com.msponto.ms_ponto.ms_clients.SolicitacaoClient;
 import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 import com.msponto.ms_ponto.repositorio.mysql.HorasRepositorio;
 
@@ -25,6 +28,9 @@ public class HorasServico {
 
     @Autowired
     private UsuarioClient usuarioClient;
+    
+    @Autowired
+    private SolicitacaoClient solicitacaoClient;
 
     public List<Horas> getAllHoras(){
         List<Horas> usuario_horas = horas_repo.findAll();
@@ -153,6 +159,8 @@ public class HorasServico {
                     horas.setHorasFaltantes(0.0f);
                     horas.setHorasTrabalhadas((float) usuario_carga);
                     horas.setHorasExtras(horas_extras);
+                    
+                    criarSolicitacaoHoraExtra(usuario_cod, horas_extras);
                 }
 
                 horas_repo.save(horas); 
@@ -186,4 +194,28 @@ public class HorasServico {
             }
         }
     }
+   
+   public Boolean criarSolicitacaoHoraExtra(Long usuarioCod, Float horasExtras) {
+	    try {
+	        SolicitacaoDTO solicitacaoDTO = new SolicitacaoDTO();
+	        solicitacaoDTO.setSolicitacaoMensagem("Solicitação automática de horas extras");
+	        solicitacaoDTO.setUsuarioCod(usuarioCod);
+	        solicitacaoDTO.setHorasSolicitadas((double) horasExtras);
+
+	        SolicitacaoTipoDTO tipoSolicitacaoDTO = new SolicitacaoTipoDTO();
+	        tipoSolicitacaoDTO.setTipoSolicitacaoCod(5L);  
+
+	        solicitacaoDTO.setTipoSolicitacaoCod(tipoSolicitacaoDTO);
+
+	        solicitacaoDTO.setSolicitacaoDataPeriodo(LocalDate.now());  
+
+	        Boolean resultado = solicitacaoClient.criarSolicitacao(solicitacaoDTO);
+	        return resultado;
+	    } catch (Exception e) {
+	        System.err.println("[ERRO]: " + e);
+	        return false;
+	    }
+	}
+
+
 }
