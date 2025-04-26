@@ -58,6 +58,7 @@ public class SetorControle {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(setores, HttpStatus.OK);
+    }
 
     @GetMapping("/{setorCod}/usuarios")
     public ResponseEntity<?> getUsuariosBySetorCod(@PathVariable Long setorCod) {
