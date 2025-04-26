@@ -28,7 +28,7 @@ public class MySqlConfig {
         DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
             dataSourceBuilder.url("jdbc:mysql://localhost:3306/BOTPonto");
             dataSourceBuilder.username("root");
-            dataSourceBuilder.password("root");
+            dataSourceBuilder.password("fatec");
             return dataSourceBuilder.build();
     }
 
