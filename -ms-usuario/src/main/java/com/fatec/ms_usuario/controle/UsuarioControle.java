@@ -132,7 +132,8 @@ public class UsuarioControle {
         alvo.setUsuario_cargaHoraria(usuario.getUsuario_cargaHoraria());
         alvo.setUsuarioTipoContratacao(usuario.getUsuarioTipoContratacao());
         alvo.setUsuario_dataContratacao(usuario.getUsuario_dataContratacao());
-        alvo.setUsuario_senha(passwordEncoder.encode(usuario.getUsuario_senha()));
+        if(!usuario.getUsuario_senha().equals(""))
+            alvo.setUsuario_senha(passwordEncoder.encode(usuario.getUsuario_senha()));
         alvo.setUsuarioEmail(usuario.getUsuarioEmail());
         alvo.setUsuario_DataNascimento(usuario.getUsuario_DataNascimento());
         alvo.setEmpCod(usuario.getEmpCod());
