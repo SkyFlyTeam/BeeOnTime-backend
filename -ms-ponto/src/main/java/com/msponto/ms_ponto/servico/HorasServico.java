@@ -203,31 +203,6 @@ public class HorasServico {
         }
     }
 
-      // Função para verificar falta ao iniciar a aplicação
-      public void verificarFaltaDosUsuarios() {
-        // Buscar todos os usuários do microserviço
-        List<UsuarioDTO> usuarios = usuarioClient.getAllUsuarios();
-        LocalDate dataAtual = LocalDate.now().minusDays(1);
-
-        for (UsuarioDTO usuario: usuarios) {
-            if (usuario.getNivelAcesso().getNivelAcesso_cod() != 0) {
-                Optional<Horas> horas_existe = getOptionalUsuarioHorasByDate(usuario.getUsuario_cod(), dataAtual);
-                Horas horas_info = getUsuarioHorasByDate(usuario.getUsuario_cod(), dataAtual);
-
-                if(!horas_existe.isEmpty()){
-                    if (horas_info.getHorasTrabalhadas() == 0 && faltaRepositorio.findByFaltaDiaAndUsuarioCod(dataAtual, usuario.getUsuario_cod()) == null){
-                        Falta falta = new Falta();
-
-                        falta.setFaltaDia(dataAtual);
-                        falta.setUsuarioCod(usuario.getUsuario_cod());
-
-                        faltaRepositorio.save(falta);
-                    }
-                }
-            }
-        }
-    }
-
    public void verificarDiaTrabalhadoDosUsuarios() {
         // Buscar todos os usuários do microserviço
         List<UsuarioDTO> usuarios = usuarioClient.getAllUsuarios();
