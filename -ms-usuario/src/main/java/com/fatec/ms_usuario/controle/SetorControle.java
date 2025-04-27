@@ -38,6 +38,16 @@ public class SetorControle {
         return new ResponseEntity<>(savedSetor, HttpStatus.CREATED);
     }
 
+    @GetMapping("/empresa/{empCod}")
+    public ResponseEntity<List<Setor>> obterSetorPorEmpresaId(@PathVariable Long empCod) {
+        List<Setor> setores = repositorio.findAll();
+        setores.removeIf(setor -> (setor.getEmpCod() != empCod));
+
+        if(setores.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(setores, HttpStatus.OK);
+    }
+
     @GetMapping("/{setorCod}")
     public ResponseEntity<Setor> obterSetorPorId(@PathVariable Long setorCod) {
         return repositorio.findById(setorCod)

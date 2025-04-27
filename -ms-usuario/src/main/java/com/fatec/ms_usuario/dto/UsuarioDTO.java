@@ -12,6 +12,7 @@ public class UsuarioDTO {
     private LocalTime horarioSaida; // Alterando de Time para LocalTime
 
     private Boolean horarioFlexivel;
+    private Boolean usuario_status;
     private Long nivelAcesso_cod;
     private Long setorCod;
     private String usuarioEmail;
@@ -97,6 +98,12 @@ public class UsuarioDTO {
     }
     public void setUsuario_cargo(String usuario_cargo) {
         this.usuario_cargo = usuario_cargo;
+    }
+    public Boolean getUsuario_status() {
+        return usuario_status;
+    }
+    public void setUsuario_status(Boolean usuario_status) {
+        this.usuario_status = usuario_status;
     }
     public String getUsuario_cpf() {
         return usuario_cpf;

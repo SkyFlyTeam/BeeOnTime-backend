@@ -61,6 +61,9 @@ public class Usuario {
 	@Column
 	private String usuario_cargo;
 
+	@Column
+	private Boolean usuario_status;
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "empCod", referencedColumnName = "empCod", insertable = false, updatable = false)
 	@JsonIgnore
@@ -218,6 +221,14 @@ public class Usuario {
 		this.usuario_cargo = usuario_cargo;
 	}
 
+	public Boolean getUsuario_status() {
+		return usuario_status;
+	}
+	
+	public void setUsuario_status(Boolean usuario_status) {
+		this.usuario_status = usuario_status;
+	}
+	
 	public NivelAcesso getNivelAcesso(){
 		return nivelAcesso;
 	}
