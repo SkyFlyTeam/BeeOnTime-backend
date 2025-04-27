@@ -1,24 +1,36 @@
-## Instalação e utilização
+## 🚀 Instalação
 
-### Configuração do backend
-
-- Fazer o clone do repositório backend
-https://github.com/SkyFlyTeam/BeeOnTime-backend.git
-
-- Dentro da pasta "BeeOnTime-backend" entrar na pasta de "-ms-usuario" e abrir em seu editor de código
-
-- Fazendo o caminho src > main > resources terá o arquivo "application.properties" onde você irá configurar seu banco de dados (será necessário ter criado ele antecipadamente)
-
-```
-spring.datasource.url=jdbc:mysql://localhost:3306/[NOME_SCHEMA]
-spring.datasource.username=[USUÁIO]
-spring.datasource.password=[SENHA]
-spring.jpa.show-sql=true
+### 1. Clone o repositório
+```bash
+git clone https://github.com/SkyFlyTeam/BeeOnTime-backend.git
 ```
 
-- Após configurar estes arquivos digite o seguinte comando dentro da pasta para iniciar o projeto:o 
+### 2. Configuração dos serviços
+
+Para **cada serviço** (`-ms-usuario`, `-ms-ponto`, `-ms-solicitacao`, `-ms-banco-horas`):
+
+- Abra o projeto no seu editor.
+- Edite o arquivo `src/main/resources/application.properties`:
+  ```properties
+  spring.datasource.url=jdbc:mysql://localhost:3306/[NOME_DO_SCHEMA]
+  spring.datasource.username=[USUÁRIO]
+  spring.datasource.password=[SENHA]
+  spring.jpa.show-sql=true
+  ```
+> Certifique-se de que o schema (banco de dados) foi criado no MySQL.
+
+### 3. Configuração extra para o `-ms-ponto`
+
+Além do `application.properties`, edite também:
 ```
+src/main/java/com/msponto/ms_ponto/config/MySqlConfig.java
+```
+Atualize as informações do banco de dados conforme necessário.
+
+### 4. Executando os serviços
+
+Navegue até a pasta de cada serviço e execute:
+```bash
 mvn spring-boot:run
 ```
-
-- Repita o processo com o -ms-solicitações, rodando os dois ao mesmo tempo
+> Todos os serviços precisam estar rodando ao mesmo tempo.
