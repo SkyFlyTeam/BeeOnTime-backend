@@ -9,8 +9,9 @@ import com.fatec.ms_usuario.repositorio.FolgaTipoRepositorio;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/usuario/folga-tipos")
+@RequestMapping("/folga-tipos")
 public class FolgaTipoControle {
 
     @Autowired

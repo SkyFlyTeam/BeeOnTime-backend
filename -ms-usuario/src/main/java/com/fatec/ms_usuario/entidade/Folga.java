@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -41,6 +42,10 @@ public class Folga {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "folTipoCod")
 	private FolgaTipo folgaTipo;
+
+	@Lob
+	@Column(name = "documento")
+	private byte[] documento; // Para armazenar o arquivo como binário no banco de dados
 
 	public long getFolCod() {
 		return folCod;
@@ -88,6 +93,14 @@ public class Folga {
 
     public void setFolgaTipo(FolgaTipo folgaTipo) {
         this.folgaTipo = folgaTipo;
+    }
+
+	public byte[] getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(byte[] documento) {
+        this.documento = documento;
     }
 
 }
