@@ -13,12 +13,14 @@ import com.msponto.ms_ponto.dto.SolicitacaoTipoDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
 import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos;
 import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos.Ponto;
+import com.msponto.ms_ponto.entidade.mysql.Falta;
 import com.msponto.ms_ponto.entidade.mysql.Horas;
 import com.msponto.ms_ponto.enums.TipoPonto;
 import com.msponto.ms_ponto.modelo.HorasAtualizador;
 import com.msponto.ms_ponto.modelo.VerificadorDiaTrabalhado;
 import com.msponto.ms_ponto.ms_clients.SolicitacaoClient;
 import com.msponto.ms_ponto.ms_clients.UsuarioClient;
+import com.msponto.ms_ponto.repositorio.mysql.FaltaRepositorio;
 import com.msponto.ms_ponto.repositorio.mysql.HorasRepositorio;
 
 @Service
@@ -31,6 +33,9 @@ public class HorasServico {
     
     @Autowired
     private SolicitacaoClient solicitacaoClient;
+
+    @Autowired
+    private FaltaRepositorio faltaRepositorio;
 
     public List<Horas> getAllHoras(){
         List<Horas> usuario_horas = horas_repo.findAll();
@@ -172,6 +177,31 @@ public class HorasServico {
            return false;
        }
    }
+
+   // Função para verificar falta junto do job cron
+   public void verificarFaltaDosUsuariosJob() {
+        // Buscar todos os usuários do microserviço
+        List<UsuarioDTO> usuarios = usuarioClient.getAllUsuarios();
+        LocalDate dataAnterior = LocalDate.now().minusDays(1);
+
+        for (UsuarioDTO usuario: usuarios) {
+            if (usuario.getNivelAcesso().getNivelAcesso_cod() != 0) {
+                Optional<Horas> horas_existe = getOptionalUsuarioHorasByDate(usuario.getUsuario_cod(), dataAnterior);
+                Horas horas_info = getUsuarioHorasByDate(usuario.getUsuario_cod(), dataAnterior);
+
+                if(!horas_existe.isEmpty()){
+                        if (horas_info.getHorasTrabalhadas() == 0 && faltaRepositorio.findByFaltaDiaAndUsuarioCod(dataAnterior, usuario.getUsuario_cod()) == null){
+                            Falta falta = new Falta();
+
+                            falta.setFaltaDia(dataAnterior);
+                            falta.setUsuarioCod(usuario.getUsuario_cod());
+
+                            faltaRepositorio.save(falta);
+                        }
+                }
+            }
+        }
+    }
 
    public void verificarDiaTrabalhadoDosUsuarios() {
         // Buscar todos os usuários do microserviço
