@@ -1,16 +1,24 @@
 package com.ms.solicitacao.service;
 
+import com.ms.solicitacao.dto.HorasDTO;
+import com.ms.solicitacao.dto.SolicitacaoTipoDTO;
 import com.ms.solicitacao.dto.UsuarioDTO;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.ms.solicitacao.dto.UsuarioDTO;
 import com.ms.solicitacao.model.Solicitacao;
+import com.ms.solicitacao.model.SolicitacaoStatus;
 import com.ms.solicitacao.model.SolicitacaoTipo;
 import com.ms.solicitacao.repository.SolicitacaoRepository;
 import com.ms.solicitacao.repository.SolicitacaoTipoRepository;
@@ -28,6 +36,8 @@ public class SolicitacaoService {
     private RestTemplate restTemplate;
 
     private static final String URL_SERVICO_USUARIO = "http://localhost:8081/usuario/";  
+    
+    private static final String URL_SERVICO_HORAS = "http://localhost:8082/horas/"; 
 
     public List<Solicitacao> findAll() {
         List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
@@ -35,6 +45,35 @@ public class SolicitacaoService {
             adicionarUsuarioInformacao(solicitacao);
         }
         return solicitacoes;
+    }
+    
+    public List<Solicitacao> findAllByUsuario(long usuarioId) {
+    	List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
+    	for (Solicitacao solicitacao : solicitacoes) {
+            adicionarUsuarioInformacao(solicitacao);
+        }
+    	List<Solicitacao> solicitacoesUsuario = solicitacoes.stream()
+    			.filter(solicitacao -> solicitacao.getUsuarioCod() == usuarioId)
+    			.collect(Collectors.toList());
+    	if (solicitacoesUsuario != null) {
+    		return solicitacoesUsuario;
+    	}
+    	return null;
+    }
+    
+    
+    public List<Solicitacao> findAllBySetor(long setorCod) {
+    	List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
+    	for (Solicitacao solicitacao : solicitacoes) {
+            adicionarUsuarioInformacao(solicitacao);
+        }
+    	List<Solicitacao> solicitacoesSetor = solicitacoes.stream()
+    			.filter(solicitacao -> solicitacao.getSetorCod() == setorCod)
+    			.collect(Collectors.toList());
+    	if (solicitacoesSetor != null) {
+    		return solicitacoesSetor;
+    	}
+    	return null;
     }
 
     public Solicitacao findById(long id) {
@@ -48,12 +87,78 @@ public class SolicitacaoService {
 	        Optional<SolicitacaoTipo> tipo = solicitacaoTipoRepository.findById(solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod());
 	        tipo.ifPresent(tipoSolicitacao -> solicitacao.setTipoSolicitacaoCod(tipoSolicitacao));
 	    }
+	    
+	    String dataFormatada = solicitacao.getSolicitacaoDataPeriodo().toString();
+        String horasUrl = URL_SERVICO_HORAS + "usuario/" + solicitacao.getUsuarioCod() + "/dia?data=" + dataFormatada;
+        
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);  
+
+            HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+            HorasDTO horas = restTemplate.exchange(horasUrl, HttpMethod.POST, entity, HorasDTO.class).getBody();
+            if (horas != null) {
+                System.out.println("Horas recuperadas: " + horas);
+
+                horas.setHorasExtras(solicitacao.getHorasSolicitadas());
+                String horasUrlAtualizar = URL_SERVICO_HORAS + "atualizar";
+                System.out.println("URL de atualização: " + horasUrlAtualizar);
+
+                HttpEntity<HorasDTO> requestEntity = new HttpEntity<>(horas, headers);
+                restTemplate.exchange(horasUrlAtualizar, HttpMethod.PUT, requestEntity, HorasDTO.class);
+
+            } else {
+                System.err.println("Horas não encontradas para o usuário.");
+            }
+        } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
+            System.err.println("Usuário com ID " + solicitacao.getUsuarioCod() + " não encontrado.");
+        } catch (Exception e) {
+            System.err.println("Erro ao buscar usuário com ID " + solicitacao.getUsuarioCod() + ": " + e.getMessage());
+        }
+	    
 	    return solicitacaoRepository.save(solicitacao);
 	}
 	
 	public Solicitacao edit(Solicitacao solicitacao) {
 	    Solicitacao selecionado = solicitacaoRepository.findById(solicitacao.getSolicitacaoCod())
 	        .orElseThrow(() -> new RuntimeException("Solicitação não encontrada!"));
+
+	    if (solicitacao.getSolicitacaoStatus() == SolicitacaoStatus.RECUSADA &&
+	    	    solicitacao.getTipoSolicitacaoCod() != null &&
+	    	    solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod() == 5) {
+	        System.out.println("Status da solicitação é RECUSADA, atualizando horas...");
+
+	        String dataFormatada = solicitacao.getSolicitacaoDataPeriodo().toString();
+	        String horasUrl = URL_SERVICO_HORAS + "usuario/" + solicitacao.getUsuarioCod() + "/dia?data=" + dataFormatada;
+	        System.out.println("URL de consulta: " + horasUrl);  
+
+	        try {
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.setContentType(MediaType.APPLICATION_JSON);  
+
+	            HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+	            HorasDTO horas = restTemplate.exchange(horasUrl, HttpMethod.POST, entity, HorasDTO.class).getBody();
+	            if (horas != null) {
+	                System.out.println("Horas recuperadas: " + horas);
+
+	                horas.setHorasExtras(0.0);
+	                String horasUrlAtualizar = URL_SERVICO_HORAS + "atualizar";
+	                System.out.println("URL de atualização: " + horasUrlAtualizar);
+
+	                HttpEntity<HorasDTO> requestEntity = new HttpEntity<>(horas, headers);
+	                restTemplate.exchange(horasUrlAtualizar, HttpMethod.PUT, requestEntity, HorasDTO.class);
+
+	            } else {
+	                System.err.println("Horas não encontradas para o usuário.");
+	            }
+	        } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
+	            System.err.println("Usuário com ID " + solicitacao.getUsuarioCod() + " não encontrado.");
+	        } catch (Exception e) {
+	            System.err.println("Erro ao buscar usuário com ID " + solicitacao.getUsuarioCod() + ": " + e.getMessage());
+	        }
+	    }
 
 	    if (solicitacao.getSolicitacaoDevolutiva() != null) {
 	        selecionado.setSolicitacaoDevolutiva(solicitacao.getSolicitacaoDevolutiva());
@@ -67,6 +172,14 @@ public class SolicitacaoService {
 	    }
 	    if (solicitacao.getSolicitacaoMensagem() != null) {
 	        selecionado.setSolicitacaoMensagem(solicitacao.getSolicitacaoMensagem());
+	    }
+
+	    if (solicitacao.getHorasSolicitadas() != null) {
+	        selecionado.setHorasSolicitadas(solicitacao.getHorasSolicitadas());
+	    }
+
+	    if (solicitacao.getSolicitacaoDataPeriodo() != null) {
+	        selecionado.setSolicitacaoDataPeriodo(solicitacao.getSolicitacaoDataPeriodo());
 	    }
 
 	    return solicitacaoRepository.save(selecionado);
@@ -86,6 +199,8 @@ public class SolicitacaoService {
 	            if (usuario != null) {
 	                solicitacao.setUsuarioNome(usuario.getUsuario_nome());
 	                solicitacao.setUsuarioCargo(usuario.getUsuario_cargo());
+	                solicitacao.setNivelAcesso_cod(usuario.getNivelAcesso_cod());
+	                solicitacao.setSetorCod(usuario.getSetorCod());
 	            }
 	        } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
 	            System.err.println("Usuário com ID " + solicitacao.getUsuarioCod() + " não encontrado.");

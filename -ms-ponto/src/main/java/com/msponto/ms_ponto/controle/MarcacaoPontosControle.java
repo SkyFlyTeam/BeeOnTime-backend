@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.msponto.ms_ponto.dto.PeriodoDTO;
 import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos;
 import com.msponto.ms_ponto.servico.MarcacaoPontosServico;
-import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
@@ -48,7 +48,7 @@ public class MarcacaoPontosControle {
     public ResponseEntity<?> getPontosByHorasCod(@PathVariable Long horas_cod) {
         Optional<MarcacaoPontos> pontos = mponto_servico.getPontosUsuarioByCodHoras(horas_cod);
         if(!pontos.isPresent()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Falha ao cadastrar horas.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Falha ao recuperar horas.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(pontos.get());
     }

@@ -42,6 +42,12 @@ public class horasControle {
         return ResponseEntity.status(HttpStatus.OK).body(usuario_horas);
     }
 
+    @GetMapping("/gerarRegistros")
+    public ResponseEntity<String>  generateHours() {
+        horas_servico.verificarDiaTrabalhadoDosUsuarios();
+        return ResponseEntity.status(HttpStatus.OK).body("Registro de horas gerados!");
+    }
+
     // Retorna as horas de um usuário em determinado dia
     @PostMapping("/usuario/{usuario_cod}/dia")
     public ResponseEntity<Horas> getUsuarioHorasDate(@PathVariable Long usuario_cod, @RequestParam("data") String data) {
