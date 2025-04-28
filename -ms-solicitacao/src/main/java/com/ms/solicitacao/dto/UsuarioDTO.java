@@ -6,6 +6,8 @@ public class UsuarioDTO {
     private String usuario_cpf;
     private String usuario_email;
     private String usuario_cargo;
+    private int setorCod;
+    private int nivelAcesso_cod;
 
     // Getters and Setters
     public Long getUsuario_cod() {
@@ -28,7 +30,25 @@ public class UsuarioDTO {
         return usuario_cpf;
     }
 
-    public void setUsuario_cpf(String usuario_cpf) {
+    public int getSetorCod() {
+		return setorCod;
+	}
+
+	public void setSetorCod(int setorCod) {
+		this.setorCod = setorCod;
+	}
+
+
+
+	public int getNivelAcesso_cod() {
+		return nivelAcesso_cod;
+	}
+
+	public void setNivelAcesso_cod(int nivelAcesso_cod) {
+		this.nivelAcesso_cod = nivelAcesso_cod;
+	}
+
+	public void setUsuario_cpf(String usuario_cpf) {
         this.usuario_cpf = usuario_cpf;
     }
 
