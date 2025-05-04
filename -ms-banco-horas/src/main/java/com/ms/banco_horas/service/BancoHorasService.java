@@ -31,7 +31,7 @@ public class BancoHorasService {
 	@Autowired
     private RestTemplate restTemplate;
 
-    private static final String URL_SERVICO_USUARIO = "http://localhost:8081/usuario/"; 
+    private static final String URL_SERVICO_USUARIO = "http://msusuario:8081/usuario/"; 
 	
 	public List<BancoHoras> findAll(){
 		List<BancoHoras> bancoHoras = repository.findAll();

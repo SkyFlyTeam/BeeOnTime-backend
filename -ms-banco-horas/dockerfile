@@ -1,0 +1,17 @@
+FROM eclipse-temurin:21-jdk
+
+# Install maven if you're not using pre-built jars
+RUN apt-get update && apt-get install -y maven
+
+# Create app directory inside container
+WORKDIR /msbancohoras
+
+# Copy pom.xml and download dependencies early (for caching)
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy the rest of the source code
+COPY . .
+
+# Default command to build and run app (for dev purposes)
+CMD ["mvn", "spring-boot:run"]

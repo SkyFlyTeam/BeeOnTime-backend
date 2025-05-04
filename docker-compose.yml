@@ -1,0 +1,81 @@
+version: "3.8"
+
+services:
+  msusuario:
+    build: ./-ms-usuario
+    container_name: ms-usuario-dev
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./-ms-usuario:/msusuario
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/botusuario
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+  
+  msponto:
+    build: ./-ms-ponto
+    container_name: ms-ponto-dev
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./-ms-ponto:/msponto
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/botponto
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+    
+  mssolicitacao:
+    build: ./-ms-solicitacao
+    container_name: ms-solicitacao-dev
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./-ms-solicitacao:/mssolicitacao
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/botsolicitacao
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+      - msponto
+
+  msbancohoras:
+    build: ./-ms-banco-horas
+    container_name: ms-banco-horas-dev
+    ports:
+      - "8084:8084"
+    volumes:
+      - ./-ms-banco-horas:/msbancohoras
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/botbancohoras
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+
+  db:
+    image: mysql:8
+    container_name: mysql-dev
+    restart: always
+    environment:
+      MYSQL_DATABASE: botusuario
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
