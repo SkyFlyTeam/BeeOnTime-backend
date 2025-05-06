@@ -21,7 +21,7 @@ public class ExtrasPagasService {
 	@Autowired
     private RestTemplate restTemplate;
 	
-	private static final String URL_SERVICO_USUARIO = "http://localhost:8081/usuario/";
+	private static final String URL_SERVICO_USUARIO = "http://msusuario:8081/usuario/";
 	
 	public List<ExtrasPagas> findAll(){
 		List<ExtrasPagas> extrasPagas = repository.findAll();

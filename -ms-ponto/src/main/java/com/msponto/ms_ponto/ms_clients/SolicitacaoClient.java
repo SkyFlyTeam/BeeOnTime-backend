@@ -1,16 +1,16 @@
 package com.msponto.ms_ponto.ms_clients;
 
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.msponto.ms_ponto.dto.SolicitacaoDTO;
 
 @Component
 public class SolicitacaoClient {
-    private final String SOLICITACAO_API_URL = "http://localhost:8083/solicitacao/cadastrar";  // URL do microserviço de solicitações
+    private final String SOLICITACAO_API_URL = "http://mssolicitacao:8083/solicitacao/cadastrar";  // URL do microserviço de solicitações
 
     private final WebClient.Builder webClientBuilder;
 
