@@ -1,12 +1,19 @@
 package com.msponto.ms_ponto.entidade.mysql;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -34,6 +41,11 @@ public class Horas {
 
     @Column
     private Long usuarioCod;
+    
+    @OneToOne
+    @JoinColumn(name = "atraso_cod", referencedColumnName = "atrasoCod")
+    @JsonIgnoreProperties("horas") // Ignora a serialização de 'horas' no Atraso
+    private Atraso atraso;
 
     public Long getHorasCod() {
         return horasCod;
@@ -89,5 +101,13 @@ public class Horas {
 
     public void setUsuarioCod(Long usuarioCod) {
         this.usuarioCod = usuarioCod;
+    }
+    
+    public Atraso getAtraso() {
+        return atraso;
+    }
+
+    public void setAtraso(Atraso atraso) {
+        this.atraso = atraso;
     }
 }
