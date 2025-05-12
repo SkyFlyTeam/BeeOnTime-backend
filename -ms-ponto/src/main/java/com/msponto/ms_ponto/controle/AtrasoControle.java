@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.msponto.ms_ponto.dto.AtrasoComNomeDTO;
 import com.msponto.ms_ponto.entidade.mysql.Atraso;
 import com.msponto.ms_ponto.servico.AtrasoServico;
 
@@ -27,11 +28,11 @@ public class AtrasoControle {
 	AtrasoServico atrasoservico;
 	
 	@GetMapping("/atrasos")
-	private ResponseEntity<List<Atraso>> getAtrasos(
+	private ResponseEntity<List<AtrasoComNomeDTO>> getAtrasos(
 	    @RequestParam(required = false) LocalDate dataInicio,
 	    @RequestParam(required = false) LocalDate dataFim
 	) {
-	    List<Atraso> atrasos;
+	    List<AtrasoComNomeDTO> atrasos;
 
 	    if (dataInicio == null && dataFim == null) {
 	        atrasos = atrasoservico.findAll();
@@ -43,14 +44,14 @@ public class AtrasoControle {
 	}
 	
 	@GetMapping("/atrasos/{usuarioCod}")
-	private ResponseEntity<List<Atraso>> getAtrasosByUsuario(@PathVariable Long usuarioCod){
-		List<Atraso> atrasos = atrasoservico.findByUsuario(usuarioCod);
+	private ResponseEntity<List<AtrasoComNomeDTO>> getAtrasosByUsuario(@PathVariable Long usuarioCod){
+		List<AtrasoComNomeDTO> atrasos = atrasoservico.findByUsuario(usuarioCod);
 		return ResponseEntity.status(HttpStatus.OK).body(atrasos);
 	}
 	
 	@GetMapping("/atrasos/setor/{setorCod}")
-	private ResponseEntity<List<Atraso>> getAtrasosBySetor(@PathVariable Long setorCod){
-		List<Atraso> atrasos = atrasoservico.findBySetor(setorCod);
+	private ResponseEntity<List<AtrasoComNomeDTO>> getAtrasosBySetor(@PathVariable Long setorCod){
+		List<AtrasoComNomeDTO> atrasos = atrasoservico.findBySetor(setorCod);
 		return ResponseEntity.status(HttpStatus.OK).body(atrasos);
 	}
 	

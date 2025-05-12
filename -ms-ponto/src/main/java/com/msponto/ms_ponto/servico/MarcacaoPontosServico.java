@@ -38,6 +38,11 @@ public class MarcacaoPontosServico {
     
     @Autowired
     private UsuarioClient usuarioClient;
+    
+    public List<MarcacaoPontos> getAll(){
+    	List<MarcacaoPontos> pontos = mponto_repo.findAll();
+    	return pontos;
+    }
 
     public List<MarcacaoPontos> getPontosUsuario(Long usuario_cod) {
         List<MarcacaoPontos> pontos = mponto_repo.findByUsuarioCod(usuario_cod);
@@ -126,7 +131,10 @@ public class MarcacaoPontosServico {
                     LocalTime localTimeEntrada = jornada.getJornada_horarioEntrada() != null ? 
                                                   jornada.getJornada_horarioEntrada().toLocalTime() : null;
 
-                    if (jornada.getJornada_horarioFlexivel()) {
+                    Boolean horarioFlexivel = jornada.getJornada_horarioFlexivel();  // Pode ser null
+
+                    // Verificando se o horário flexível é verdadeiro ou se é null
+                    if (horarioFlexivel != null && horarioFlexivel) {
                         // Para jornada flexível, calcula o horário limite
                         LocalTime horaLimiteEntrada = calcularHoraLimiteFlexivel(jornada.getUsuario_cod());
 
@@ -222,7 +230,9 @@ public class MarcacaoPontosServico {
 
 
 
-    private LocalTime calcularHoraLimiteFlexivel(Long usuarioCod) {
+
+
+    public LocalTime calcularHoraLimiteFlexivel(Long usuarioCod) {
         UsuarioDTO usuarioDTO = usuarioClient.getUsuarioByCod(usuarioCod);
         Integer cargaHoraria = usuarioDTO.getUsuario_cargaHoraria(); 
 

@@ -1,9 +1,5 @@
 package com.ms.solicitacao.service;
 
-import com.ms.solicitacao.dto.HorasDTO;
-import com.ms.solicitacao.dto.SolicitacaoTipoDTO;
-import com.ms.solicitacao.dto.UsuarioDTO;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.ms.solicitacao.dto.HorasDTO;
 import com.ms.solicitacao.dto.UsuarioDTO;
 import com.ms.solicitacao.model.Solicitacao;
 import com.ms.solicitacao.model.SolicitacaoStatus;

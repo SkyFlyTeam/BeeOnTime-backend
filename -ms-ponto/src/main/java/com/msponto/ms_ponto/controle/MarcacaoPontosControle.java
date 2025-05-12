@@ -26,6 +26,12 @@ public class MarcacaoPontosControle {
 
     @Autowired
     MarcacaoPontosServico mponto_servico;
+    
+    @GetMapping("/")
+    public List<MarcacaoPontos> getAll(){
+    	List<MarcacaoPontos> pontos = mponto_servico.getAll();
+    	return pontos;
+    }
 
     // Recuperar todos os pontos de um usuário pelo código
     @GetMapping("/usuario/{usuario_cod}")

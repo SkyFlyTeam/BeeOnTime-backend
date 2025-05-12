@@ -34,6 +34,13 @@ public class horasControle {
         List<Horas> usuario_horas = horas_servico.getAllHoras();
         return ResponseEntity.status(HttpStatus.OK).body(usuario_horas);
     }
+    
+    // Retorna todas as horas cadastradas sem atraso
+    @GetMapping("/pontuais")
+    public ResponseEntity<List<Horas>> getPontuais() {
+        List<Horas> usuario_horas = horas_servico.getPontuais();
+        return ResponseEntity.status(HttpStatus.OK).body(usuario_horas);
+    }
 
     // Retorna todas as horas de um usuário
     @GetMapping("/usuario/{usuario_cod}")
