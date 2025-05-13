@@ -23,7 +23,7 @@ public class Atraso {
     private Float atrasoTempo;
     
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "horas_cod", referencedColumnName = "horasCod")
+    @JoinColumn(name = "horas_cod", referencedColumnName = "horasCod", nullable = true)
     @JsonIgnoreProperties("atraso") // Ignora a serialização de 'atraso' em Horas
     private Horas horas;
 

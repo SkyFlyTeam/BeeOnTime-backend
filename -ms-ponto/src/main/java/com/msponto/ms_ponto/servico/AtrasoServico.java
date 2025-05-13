@@ -15,10 +15,14 @@ import com.msponto.ms_ponto.dto.JornadaDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
 import com.msponto.ms_ponto.entidade.mongo.MarcacaoPontos;
 import com.msponto.ms_ponto.entidade.mysql.Atraso;
+import com.msponto.ms_ponto.entidade.mysql.Horas;
 import com.msponto.ms_ponto.enums.TipoPonto;
 import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 import com.msponto.ms_ponto.repositorio.mongo.MarcacaoPontosRepositorio;
 import com.msponto.ms_ponto.repositorio.mysql.AtrasoRepositorio;
+import com.msponto.ms_ponto.repositorio.mysql.HorasRepositorio;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AtrasoServico {
@@ -34,6 +38,9 @@ public class AtrasoServico {
 	
 	@Autowired
 	private MarcacaoPontosServico marcacaoPontosServico;
+	
+	@Autowired
+	private HorasRepositorio horasRepositorio;
 	
 	public Atraso save(Atraso atraso) {
 		return repositorio.save(atraso);
@@ -81,10 +88,34 @@ public class AtrasoServico {
 		return saved;
 	}
 	
-	public void delete(Atraso atraso) {
-		repositorio.deleteById(atraso.getAtrasoCod());;
+	@Transactional
+	public void delete(Long atrasoCod) {
+	    // Busca o atraso pelo ID
+	    Optional<Atraso> atrasoOpt = repositorio.findById(atrasoCod);
+	    
+	    if (atrasoOpt.isPresent()) {
+	        Atraso atraso = atrasoOpt.get();
+	        
+	        // Recupera a entidade Horas associada
+	        Horas horas = atraso.getHoras();
+	        
+	        if (horas != null) {
+	            // Remove a referência ao Atraso em Horas
+	            horas.setAtraso(null);
+	            
+	            // Salva a Horas com a referência removida
+	            horasRepositorio.save(horas);
+	        }
+	        
+	        // Agora é seguro excluir o Atraso
+	        repositorio.delete(atraso);
+	    } else {
+	        throw new IllegalArgumentException("Atraso não encontrado com ID: " + atrasoCod);
+	    }
 	}
-	
+
+
+
 	public List<AtrasoComNomeDTO> findBySetor(Long setorCod) {
 	    List<UsuarioDTO> usuarios = usuarioClient.getAllUsuarios();
 

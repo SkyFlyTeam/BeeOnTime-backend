@@ -43,7 +43,7 @@ public class Horas {
     private Long usuarioCod;
     
     @OneToOne
-    @JoinColumn(name = "atraso_cod", referencedColumnName = "atrasoCod")
+    @JoinColumn(name = "atraso_cod", referencedColumnName = "atrasoCod", nullable = true)
     @JsonIgnoreProperties("horas") // Ignora a serialização de 'horas' no Atraso
     private Atraso atraso;
 

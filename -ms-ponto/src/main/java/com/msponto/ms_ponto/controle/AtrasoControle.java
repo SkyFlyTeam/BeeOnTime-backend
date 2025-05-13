@@ -79,10 +79,11 @@ public class AtrasoControle {
 	
 	@DeleteMapping("/excluir")
 	private ResponseEntity<?> delete(@RequestBody Atraso atraso) {
-		if (atraso.getAtrasoCod() == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		atrasoservico.delete(atraso);
-		return ResponseEntity.ok("Atraso excluído com sucesso.");
+	    if (atraso != null && atraso.getAtrasoCod() != null) {
+	    	atrasoservico.delete(atraso.getAtrasoCod());
+	    	return ResponseEntity.ok("Atraso excluído com sucesso.");
+	    } else {
+	        throw new IllegalArgumentException("Atraso inválido ou sem ID definido");
+	    }
 	}
 }
