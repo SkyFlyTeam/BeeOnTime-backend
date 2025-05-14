@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.msponto.ms_ponto.dto.JornadaDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
 
 @Service
@@ -38,5 +39,16 @@ public class UsuarioClient {
             .retrieve()
             .bodyToMono(UsuarioDTO.class) // Retorna um Mono, que é o tipo certo para um único item
             .block(); // Bloqueia a execução até que os dados sejam retornados (isso é sincrono)
+    }
+    
+    public JornadaDTO getJornadaByUsuario(Long usuario_cod) {
+    	String usuarioServiceUrl = "http://msusuario:8081/jornada/usuario/" + usuario_cod;
+    	
+    	return webUsuarioBuilder.build()
+    		.get()
+    		.uri(usuarioServiceUrl)
+    		.retrieve()
+    		.bodyToMono(JornadaDTO.class)
+    		.block();
     }
 }
