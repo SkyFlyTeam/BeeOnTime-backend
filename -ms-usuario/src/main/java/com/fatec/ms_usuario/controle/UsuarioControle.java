@@ -81,6 +81,7 @@ public class UsuarioControle {
         novoUsuario.setUsuarioEmail(novoDTO.getUsuarioEmail());
         novoUsuario.setUsuario_DataNascimento(novoDTO.getUsuario_DataNascimento());
         novoUsuario.setUsuario_cargo(novoDTO.getUsuario_cargo());
+        novoUsuario.setUsuario_status(novoDTO.getUsuario_status());
 
         novoUsuario.setEmpCod(novoDTO.getEmpCod());
         novoUsuario.setSetorCod(novoDTO.getSetorCod());
@@ -138,6 +139,8 @@ public class UsuarioControle {
         alvo.setUsuario_DataNascimento(usuario.getUsuario_DataNascimento());
         alvo.setEmpCod(usuario.getEmpCod());
         alvo.setSetorCod(usuario.getSetorCod());
+        alvo.setNivelAcesso_cod(usuario.getNivelAcesso_cod());
+        alvo.setUsuario_status(usuario.getUsuario_status());
 
         repositorio.save(alvo);
         return ResponseEntity.ok("Usuário atualizado com sucesso.");
