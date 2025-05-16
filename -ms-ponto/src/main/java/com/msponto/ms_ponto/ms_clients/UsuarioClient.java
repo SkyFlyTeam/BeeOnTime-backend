@@ -1,11 +1,16 @@
 package com.msponto.ms_ponto.ms_clients;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.msponto.ms_ponto.dto.FeriadoDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
+
+import reactor.core.publisher.Mono;
 
 @Service
 public class UsuarioClient {
@@ -38,5 +43,26 @@ public class UsuarioClient {
             .retrieve()
             .bodyToMono(UsuarioDTO.class) // Retorna um Mono, que é o tipo certo para um único item
             .block(); // Bloqueia a execução até que os dados sejam retornados (isso é sincrono)
+    }
+
+    public Optional<FeriadoDTO> getFeriadoByEmpCodAndDate(Long empCod, LocalDate date) {
+        String usuarioServiceUrl = "http://localhost:8081/feriado/empresa" + empCod + "/data/" + date;
+
+        FeriadoDTO feriado = null;
+        try {
+            feriado = webUsuarioBuilder.build()
+                .get()
+                .uri(usuarioServiceUrl)
+                .retrieve()
+                .onStatus(status -> status.value() == 404, response -> {
+                    return Mono.empty();
+                })
+                .bodyToMono(FeriadoDTO.class)
+                .block();
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(feriado);
     }
 }

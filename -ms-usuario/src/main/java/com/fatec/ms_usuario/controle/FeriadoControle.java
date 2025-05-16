@@ -1,6 +1,8 @@
 package com.fatec.ms_usuario.controle;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +54,15 @@ public class FeriadoControle {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(feriados, HttpStatus.OK);
+    }
+
+    @GetMapping("/empresa/{empCod}/data/{data}")
+    public ResponseEntity<Feriado> obterFeriadosPorEmpresaEDia(@PathVariable Long empCod, @PathVariable LocalDate data) {
+        Optional<Feriado> feriado = repositorio.findByEmpCodAndFeriadoData(empCod, data);
+        if (feriado.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(feriado.get(), HttpStatus.OK);
     }
 
     @PutMapping("/{feriadoCod}")

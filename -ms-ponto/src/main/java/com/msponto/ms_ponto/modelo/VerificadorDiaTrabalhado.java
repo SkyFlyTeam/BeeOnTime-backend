@@ -4,12 +4,21 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.msponto.ms_ponto.dto.FeriadoDTO;
 import com.msponto.ms_ponto.dto.JornadaDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
+import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 
+@Component
 public class VerificadorDiaTrabalhado {
+
+    @Autowired
+    private UsuarioClient usuarioClient;
 
     public Boolean verificar(UsuarioDTO usuario, LocalDate dataAtual) {
         JornadaDTO jornada = usuario.getJornada();
@@ -30,5 +39,11 @@ public class VerificadorDiaTrabalhado {
         }
     
         return false;
+    }
+
+    public Boolean verificarFeriado(Long empCod, LocalDate dataAtual) {
+        Optional<FeriadoDTO> feriado = usuarioClient.getFeriadoByEmpCodAndDate(empCod, dataAtual);
+    
+        return feriado.isPresent();
     }
 }

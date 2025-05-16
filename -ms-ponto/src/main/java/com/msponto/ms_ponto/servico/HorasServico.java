@@ -37,6 +37,9 @@ public class HorasServico {
     @Autowired
     private FaltaRepositorio faltaRepositorio;
 
+    @Autowired
+    private VerificadorDiaTrabalhado verificadorDiaTrabalhado;
+
     public List<Horas> getAllHoras(){
         List<Horas> usuario_horas = horas_repo.findAll();
         return usuario_horas;
@@ -214,11 +217,13 @@ public class HorasServico {
                 Optional<Horas>  horas_existe = getOptionalUsuarioHorasByDate(usuario.getUsuario_cod(), dataAtual);
 
                 if(horas_existe.isEmpty()){
-                    VerificadorDiaTrabalhado verificador = new VerificadorDiaTrabalhado();
-                    Boolean dia_trabalhado = verificador.verificar(usuario, dataAtual);
-                    
-                    if(dia_trabalhado){
-                        createEmptyHoras(usuario, dataAtual);
+                    Boolean is_feriado = verificadorDiaTrabalhado.verificarFeriado(usuario.getEmpCod(), dataAtual);
+                    if(!is_feriado){
+                        Boolean dia_trabalhado = verificadorDiaTrabalhado.verificar(usuario, dataAtual);
+                        
+                        if(dia_trabalhado){
+                            createEmptyHoras(usuario, dataAtual);
+                        }
                     }
                 }
             }
