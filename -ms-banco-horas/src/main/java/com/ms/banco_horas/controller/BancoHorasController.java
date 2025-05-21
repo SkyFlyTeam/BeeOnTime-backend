@@ -63,6 +63,19 @@ public class BancoHorasController {
 		}
 		return new ResponseEntity<>(banco, HttpStatus.OK);
 	}
+
+	@GetMapping("/usuario/{usuarioCod}/horas-disponiveis")
+	public ResponseEntity<Double> getHorasDisponiveisPorUsuario(@PathVariable long usuarioCod) {
+		List<BancoHoras> bancoHoras = service.findAllByUsuario(usuarioCod);
+		if (bancoHoras == null || bancoHoras.isEmpty()) {
+			return ResponseEntity.ok(0.0);
+		}
+		double totalHoras = bancoHoras.stream()
+				.mapToDouble(BancoHoras::getBancoHorasSaldoAtual)
+				.sum();
+		return ResponseEntity.ok(totalHoras);
+	}
+
 	
 	@PostMapping("/cadastrar")
 	private ResponseEntity<?> save(@RequestBody BancoHoras bancoHoras) {
