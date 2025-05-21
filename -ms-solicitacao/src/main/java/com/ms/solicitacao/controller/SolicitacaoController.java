@@ -41,6 +41,11 @@ public class SolicitacaoController {
 		return solicitacaoService.findAll();
 	}
 	
+	@GetMapping("/tipo/{tipoSolicitacaoCod}")
+	private List<Solicitacao> findByTipo(@PathVariable long tipoSolicitacaoCod){
+		return solicitacaoService.findByTipo(tipoSolicitacaoCod);
+	}
+	
 	@GetMapping("/usuario/{id}")
 	private List<Solicitacao> findAllByUsuario(@PathVariable long id) {
 		return solicitacaoService.findAllByUsuario(id);
@@ -49,6 +54,11 @@ public class SolicitacaoController {
 	@GetMapping("/setor/{setorCod}")
 	private List<Solicitacao> findAllBySetor(@PathVariable long setorCod){
 		return solicitacaoService.findAllBySetor(setorCod);
+	}
+	
+	@GetMapping("/tipo/{tipoSolicitacaoCod}/setor/{setorCod}")
+	private List<Solicitacao> findAllBySetorTipo(@PathVariable long tipoSolicitacaoCod, @PathVariable long setorCod){
+		return solicitacaoService.findAllBySetorTipo(setorCod, tipoSolicitacaoCod);
 	}
 	
 	@GetMapping("/{id}")
