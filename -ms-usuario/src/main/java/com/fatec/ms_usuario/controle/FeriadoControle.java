@@ -50,9 +50,6 @@ public class FeriadoControle {
     @GetMapping("/empresa/{empCod}")
     public ResponseEntity<List<Feriado>> obterFeriadosPorEmpresa(@PathVariable Long empCod) {
         List<Feriado> feriados = repositorio.findByEmpCod(empCod);
-        if (feriados.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(feriados, HttpStatus.OK);
     }
 
