@@ -10,7 +10,7 @@ import com.msponto.ms_ponto.dto.SolicitacaoDTO;
 
 @Component
 public class SolicitacaoClient {
-    private final String SOLICITACAO_API_URL = "http://localhost:8083/solicitacao/cadastrar";  // URL do microserviço de solicitações
+    private final String SOLICITACAO_API_URL = "http://mssolicitacao:8083/solicitacao/cadastrar";  // URL do microserviço de solicitações
 
     private final WebClient.Builder webClientBuilder;
 

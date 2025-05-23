@@ -37,9 +37,9 @@ public class SolicitacaoService {
 	@Autowired
     private RestTemplate restTemplate;
 
-    private static final String URL_SERVICO_USUARIO = "http://localhost:8081/usuario/";  
+    private static final String URL_SERVICO_USUARIO = "http://msusuario:8081/usuario/";  
     
-    private static final String URL_SERVICO_HORAS = "http://localhost:8082/horas/"; 
+    private static final String URL_SERVICO_HORAS = "http://msponto:8082/horas/"; 
 
     public List<Solicitacao> findAll() {
         List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();

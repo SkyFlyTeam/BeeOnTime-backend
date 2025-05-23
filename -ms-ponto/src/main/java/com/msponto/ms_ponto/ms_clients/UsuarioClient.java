@@ -25,7 +25,7 @@ public class UsuarioClient {
 
     public List<UsuarioDTO> getAllUsuarios() {
         // URL do microserviço de usuarios
-        String usuarioServiceUrl = "http://localhost:8081/usuario/usuarios"; 
+        String usuarioServiceUrl = "http://msusuario:8081/usuario/usuarios"; 
         
         return webUsuarioBuilder.build()
                 .get()
@@ -38,7 +38,7 @@ public class UsuarioClient {
 
     public UsuarioDTO getUsuarioByCod(Long usuario_cod) {
         // URL do microserviço de usuarios
-        String usuarioServiceUrl = "http://localhost:8081/usuario/" + usuario_cod; 
+        String usuarioServiceUrl = "http://msusuario:8081/usuario/" + usuario_cod; 
         
         return webUsuarioBuilder.build()
             .get()
@@ -49,7 +49,7 @@ public class UsuarioClient {
     }
 
     public Optional<FeriadoDTO> getFeriadoByEmpCodAndDate(Long empCod, LocalDate date) {
-        String usuarioServiceUrl = "http://localhost:8081/feriado/empresa" + empCod + "/data/" + date;
+        String usuarioServiceUrl = "http://msusuario:8081/feriado/empresa" + empCod + "/data/" + date;
 
         FeriadoDTO feriado = null;
         try {
