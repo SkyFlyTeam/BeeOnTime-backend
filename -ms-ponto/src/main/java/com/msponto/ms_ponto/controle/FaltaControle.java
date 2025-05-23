@@ -51,7 +51,7 @@ public class FaltaControle {
     
     @GetMapping("/setor/{setorCod}")
     public ResponseEntity<List<Falta>> getPorSetor(@PathVariable Long setorCod){
-    	List<UsuarioDTO> usuarios = usuarioCliente.getAllUsuarios();
+    	List<UsuarioDTO> usuarios = usuarioClient.getAllUsuarios();
 
 	    List<UsuarioDTO> usuariosSetor = usuarios.stream()
 	        .filter(usuario -> usuario.getSetor().getSetorCod().equals(setorCod))
