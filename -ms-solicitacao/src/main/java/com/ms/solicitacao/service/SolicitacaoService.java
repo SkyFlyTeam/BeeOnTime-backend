@@ -4,6 +4,7 @@ import com.ms.solicitacao.dto.HorasDTO;
 import com.ms.solicitacao.dto.SolicitacaoTipoDTO;
 import com.ms.solicitacao.dto.UsuarioDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.ms.solicitacao.dto.HorasDTO;
 import com.ms.solicitacao.dto.UsuarioDTO;
 import com.ms.solicitacao.model.Solicitacao;
 import com.ms.solicitacao.model.SolicitacaoStatus;
@@ -47,6 +49,13 @@ public class SolicitacaoService {
         return solicitacoes;
     }
     
+    public List<Solicitacao> findByTipo(long tipoSolicitacaoCod){
+    	List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
+    	return solicitacoes.stream()
+    			.filter(solicitacao -> solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod() == tipoSolicitacaoCod)
+    			.collect(Collectors.toList());
+    }
+    
     public List<Solicitacao> findAllByUsuario(long usuarioId) {
     	List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
     	for (Solicitacao solicitacao : solicitacoes) {
@@ -75,6 +84,22 @@ public class SolicitacaoService {
     	}
     	return null;
     }
+    
+    public List<Solicitacao> findAllBySetorTipo(long setorCod, long tipoSolicitacaoCod) {
+    	List<Solicitacao> solicitacoes = solicitacaoRepository.findAll();
+    	for (Solicitacao solicitacao : solicitacoes) {
+            adicionarUsuarioInformacao(solicitacao);
+        }
+    	List<Solicitacao> solicitacoesSetor = solicitacoes.stream()
+    			.filter(solicitacao -> solicitacao.getSetorCod() == setorCod)
+    			.collect(Collectors.toList());
+    	if (solicitacoesSetor != null) {
+    		return solicitacoesSetor.stream()
+        			.filter(solicitacao -> solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod() == tipoSolicitacaoCod)
+        			.collect(Collectors.toList());
+    	}
+    	return null;
+    }
 
     public Solicitacao findById(long id) {
         Solicitacao solicitacao = solicitacaoRepository.findById(id).orElseThrow(() -> new RuntimeException("Solicitação não encontrada"));
@@ -82,43 +107,58 @@ public class SolicitacaoService {
         return solicitacao;
     }
 	
-	public Solicitacao save(Solicitacao solicitacao) {
-	    if (solicitacao.getTipoSolicitacaoCod() != null) {
-	        Optional<SolicitacaoTipo> tipo = solicitacaoTipoRepository.findById(solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod());
-	        tipo.ifPresent(tipoSolicitacao -> solicitacao.setTipoSolicitacaoCod(tipoSolicitacao));
-	    }
-	    
-	    String dataFormatada = solicitacao.getSolicitacaoDataPeriodo().toString();
-        String horasUrl = URL_SERVICO_HORAS + "usuario/" + solicitacao.getUsuarioCod() + "/dia?data=" + dataFormatada;
-        
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);  
-
-            HttpEntity<String> entity = new HttpEntity<>(null, headers);
-
-            HorasDTO horas = restTemplate.exchange(horasUrl, HttpMethod.POST, entity, HorasDTO.class).getBody();
-            if (horas != null) {
-                System.out.println("Horas recuperadas: " + horas);
-
-                horas.setHorasExtras(solicitacao.getHorasSolicitadas());
-                String horasUrlAtualizar = URL_SERVICO_HORAS + "atualizar";
-                System.out.println("URL de atualização: " + horasUrlAtualizar);
-
-                HttpEntity<HorasDTO> requestEntity = new HttpEntity<>(horas, headers);
-                restTemplate.exchange(horasUrlAtualizar, HttpMethod.PUT, requestEntity, HorasDTO.class);
-
-            } else {
-                System.err.println("Horas não encontradas para o usuário.");
-            }
-        } catch (org.springframework.web.client.HttpClientErrorException.NotFound e) {
-            System.err.println("Usuário com ID " + solicitacao.getUsuarioCod() + " não encontrado.");
-        } catch (Exception e) {
-            System.err.println("Erro ao buscar usuário com ID " + solicitacao.getUsuarioCod() + ": " + e.getMessage());
+    public Solicitacao save(Solicitacao solicitacao) {
+        if (solicitacao.getTipoSolicitacaoCod() != null) {
+            Optional<SolicitacaoTipo> tipo = solicitacaoTipoRepository.findById(solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod());
+            tipo.ifPresent(solicitacao::setTipoSolicitacaoCod);
         }
-	    
-	    return solicitacaoRepository.save(solicitacao);
-	}
+
+        // Tipos que não atualizam horas
+        List<Long> tiposSemHoras = List.of(2L, 3L, 4L, 6L);
+        Long tipoCod = solicitacao.getTipoSolicitacaoCod() != null ? solicitacao.getTipoSolicitacaoCod().getTipoSolicitacaoCod() : null;
+
+        if (tipoCod != null && !tiposSemHoras.contains(tipoCod)) {
+            // Atualiza horas só para os tipos que não estão na lista acima
+            List<LocalDate> datas = solicitacao.getSolicitacaoDataPeriodo();
+
+            if (datas == null || datas.isEmpty()) {
+                throw new RuntimeException("Período de datas inválido ou vazio.");
+            }
+
+            for (LocalDate data : datas) {
+                String dataFormatada = data.toString();
+                String horasUrl = URL_SERVICO_HORAS + "usuario/" + solicitacao.getUsuarioCod() + "/dia?data=" + dataFormatada;
+
+                try {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+
+                    HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+                    HorasDTO horas = restTemplate.exchange(horasUrl, HttpMethod.POST, entity, HorasDTO.class).getBody();
+
+                    if (horas != null) {
+                        horas.setHorasExtras(solicitacao.getHorasSolicitadas());
+                        String horasUrlAtualizar = URL_SERVICO_HORAS + "atualizar";
+                        HttpEntity<HorasDTO> requestEntity = new HttpEntity<>(horas, headers);
+                        restTemplate.exchange(horasUrlAtualizar, HttpMethod.PUT, requestEntity, HorasDTO.class);
+                    } else {
+                        System.err.println("Horas não encontradas para o usuário na data " + dataFormatada);
+                    }
+
+                } catch (Exception e) {
+                    System.err.println("Erro ao processar data " + dataFormatada + ": " + e.getMessage());
+                }
+            }
+        } else {
+            // Para os tipos que não atualizam horas, só salvar direto
+            System.out.println("Tipo " + tipoCod + " não requer atualização de horas.");
+        }
+
+        return solicitacaoRepository.save(solicitacao);
+    }
+
+
 	
 	public Solicitacao edit(Solicitacao solicitacao) {
 	    Solicitacao selecionado = solicitacaoRepository.findById(solicitacao.getSolicitacaoCod())

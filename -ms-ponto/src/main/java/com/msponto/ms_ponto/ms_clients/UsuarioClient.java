@@ -7,10 +7,12 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+
 import com.msponto.ms_ponto.dto.FeriadoDTO;
+import com.msponto.ms_ponto.dto.JornadaDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
 
-import reactor.core.publisher.Mono;
+import reactor.core.publWisher.Mono;
 
 @Service
 public class UsuarioClient {
@@ -64,5 +66,17 @@ public class UsuarioClient {
         }
 
         return Optional.ofNullable(feriado);
+    }
+
+    
+    public JornadaDTO getJornadaByUsuario(Long usuario_cod) {
+    	String usuarioServiceUrl = "http://msusuario:8081/jornada/usuario/" + usuario_cod;
+    	
+    	return webUsuarioBuilder.build()
+    		.get()
+    		.uri(usuarioServiceUrl)
+    		.retrieve()
+    		.bodyToMono(JornadaDTO.class)
+    		.block();
     }
 }

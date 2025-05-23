@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.msponto.ms_ponto.dto.UsuarioDTO;
+import com.msponto.ms_ponto.dto.AtrasoComNomeDTO;
+import com.msponto.ms_ponto.dto.UsuarioDTO;
+import com.msponto.ms_ponto.entidade.mysql.Atraso;
 import com.msponto.ms_ponto.entidade.mysql.Falta;
 import com.msponto.ms_ponto.ms_clients.UsuarioClient;
 import com.msponto.ms_ponto.repositorio.mysql.FaltaRepositorio;
@@ -44,6 +47,27 @@ public class FaltaControle {
     public ResponseEntity<List<Falta>> getAllFaltas(@PathVariable Long usuario_cod) {
         List<Falta> faltas = faltaRepositorio.findByUsuarioCod(usuario_cod);
         return ResponseEntity.status(HttpStatus.OK).body(faltas);
+    }
+    
+    @GetMapping("/setor/{setorCod}")
+    public ResponseEntity<List<Falta>> getPorSetor(@PathVariable Long setorCod){
+    	List<UsuarioDTO> usuarios = usuarioCliente.getAllUsuarios();
+
+	    List<UsuarioDTO> usuariosSetor = usuarios.stream()
+	        .filter(usuario -> usuario.getSetor().getSetorCod().equals(setorCod))
+	        .collect(Collectors.toList());
+	    
+	    List<Falta> faltas = faltaRepositorio.findAll();
+	    
+	    List<Falta> faltasSetor = faltas.stream()
+		        .filter(falta -> {
+	                Long usuarioCod = falta.getUsuarioCod(); 
+	                return usuariosSetor.stream()
+	                    .anyMatch(usuario -> usuario.getUsuario_cod().equals(usuarioCod)); 
+		        })
+		        .collect(Collectors.toList());
+		    
+	    return ResponseEntity.status(HttpStatus.OK).body(faltasSetor);
     }
 
     @GetMapping("/{usuario_cod}/dia")

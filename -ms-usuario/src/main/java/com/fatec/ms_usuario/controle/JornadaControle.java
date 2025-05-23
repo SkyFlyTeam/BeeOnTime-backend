@@ -24,6 +24,9 @@ public class JornadaControle {
 	@Autowired
 	private UsuarioRepositorio usuarioRepositorio;
 	
+	@Autowired
+	private JornadaRepositorio jornadaRepositorio;
+	
 	@GetMapping("/jornadas")
 	public ResponseEntity<List<Jornada>> obterJornadas() {
 		List<Jornada> jornadas = repositorio.findAll();
@@ -53,10 +56,15 @@ public class JornadaControle {
 	    return new ResponseEntity<>(status);
 	}
 
-
-
-
-
+	@GetMapping("/usuario/{usuario_cod}")
+	public ResponseEntity<?> jornadaByUsuario(@PathVariable Long usuario_cod){
+		Optional<Usuario> usuario = usuarioRepositorio.findById(usuario_cod);
+		if(usuario.isPresent()) {
+			Jornada jornada = jornadaRepositorio.findByUsuario(usuario.get());
+			return new ResponseEntity<>(jornada, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	}
 
 	
 	@GetMapping("/{id}")

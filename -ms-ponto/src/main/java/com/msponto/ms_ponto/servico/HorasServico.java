@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,13 @@ public class HorasServico {
     public List<Horas> getAllHoras(){
         List<Horas> usuario_horas = horas_repo.findAll();
         return usuario_horas;
+    }
+    
+    public List<Horas> getPontuais() {
+    	List<Horas> horas = horas_repo.findAll();
+    	return horas.stream()
+    			.filter(hora -> hora.getAtraso() == null)
+    			.collect(Collectors.toList());
     }
 
     public List<Horas> getUsuarioHoras(Long usuario_cod){
