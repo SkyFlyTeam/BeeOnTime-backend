@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.msponto.ms_ponto.dto.FeriadoDTO;
+import com.msponto.ms_ponto.dto.FolgaDTO;
 import com.msponto.ms_ponto.dto.JornadaDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
 import com.msponto.ms_ponto.ms_clients.UsuarioClient;
@@ -45,5 +46,22 @@ public class VerificadorDiaTrabalhado {
         Optional<FeriadoDTO> feriado = usuarioClient.getFeriadoByEmpCodAndDate(empCod, dataAtual);
     
         return feriado.isPresent();
+    }
+
+    public Boolean verificarFolga(Long usuarioCod, LocalDate dataAtual) {
+        List<FolgaDTO> folgas = usuarioClient.getFolgasByUsuario(usuarioCod);
+
+        if (folgas == null || folgas.isEmpty()) {
+            return false; 
+        }
+
+        for (FolgaDTO folga : folgas) {
+            List<LocalDate> periodo = folga.getFolgaDataPeriodo();
+            if (periodo != null && periodo.contains(dataAtual)) {
+                return true;
+            }
+        }
+
+        return false; 
     }
 }

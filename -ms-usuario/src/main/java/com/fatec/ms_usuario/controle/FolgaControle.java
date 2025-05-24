@@ -47,6 +47,11 @@ public class FolgaControle {
     	return ResponseEntity.ok(folgaServico.listarFaltasPorEmpresaEData(empCod, data));
     }
 
+    @GetMapping("/usuario/{usuarioCod}")
+    public ResponseEntity<?> buscarPorUsuario(@PathVariable Long usuarioCod){
+    	return ResponseEntity.ok(folgaServico.listarPorUsuario(usuarioCod));
+    }
+
     @PostMapping("/cadastrar")
     public ResponseEntity<Folga> criar(@RequestBody Folga folga) {
         Folga novaFolga = folgaServico.salvar(folga);

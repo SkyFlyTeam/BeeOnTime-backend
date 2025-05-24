@@ -226,7 +226,8 @@ public class HorasServico {
 
                 if(horas_existe.isEmpty()){
                     Boolean is_feriado = verificadorDiaTrabalhado.verificarFeriado(usuario.getEmpCod(), dataAtual);
-                    if(!is_feriado){
+                    Boolean is_folga = verificadorDiaTrabalhado.verificarFolga(usuario.getUsuario_cod(), dataAtual);
+                    if(!is_feriado && is_folga){
                         Boolean dia_trabalhado = verificadorDiaTrabalhado.verificar(usuario, dataAtual);
                         
                         if(dia_trabalhado){

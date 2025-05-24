@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,7 +78,7 @@ public class FaltaControle {
         return ResponseEntity.status(HttpStatus.OK).body(falta);
     }
 
-    @GetMapping("/empresa/{empCod}/mes/{dia}")
+    @GetMapping("/empresa/{empCod}/mes/{data}")
     public ResponseEntity<List<Falta>> getAllEmpresaFaltasByDate(@PathVariable Long empCod, @PathVariable LocalDate data) {
         YearMonth anoMes = YearMonth.from(data);
         LocalDate dataInicial = anoMes.atDay(1);
@@ -96,6 +97,12 @@ public class FaltaControle {
             .collect(Collectors.toList());
 
         return ResponseEntity.ok(faltasDaEmpresa);
+    }
+
+    @PostMapping
+    public ResponseEntity<Falta> criarFalta(@RequestBody Falta falta) {
+        Falta novaFalta = faltaRepositorio.save(falta);
+        return ResponseEntity.ok(novaFalta);
     }
 
     @PutMapping("/atualizar")

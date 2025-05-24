@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 
 import com.msponto.ms_ponto.dto.FeriadoDTO;
+import com.msponto.ms_ponto.dto.FolgaDTO;
 import com.msponto.ms_ponto.dto.JornadaDTO;
 import com.msponto.ms_ponto.dto.UsuarioDTO;
 
@@ -69,7 +70,6 @@ public class UsuarioClient {
         return Optional.ofNullable(feriado);
     }
 
-    
     public JornadaDTO getJornadaByUsuario(Long usuario_cod) {
     	String usuarioServiceUrl = "http://msusuario:8081/jornada/usuario/" + usuario_cod;
     	
@@ -79,5 +79,17 @@ public class UsuarioClient {
     		.retrieve()
     		.bodyToMono(JornadaDTO.class)
     		.block();
+    }
+
+    public List<FolgaDTO> getFolgasByUsuario(Long usuarioCod) {
+        String usuarioServiceUrl = "http://msusuario:8081/folgas/usuario/" + usuarioCod;
+        
+        return webUsuarioBuilder.build()
+                .get()
+                .uri(usuarioServiceUrl)
+                .retrieve()
+                .bodyToFlux(FolgaDTO.class) // Retorna um Flux (assíncrono)
+                .collectList() // Coleta a lista de usuários
+                .block(); // Bloqueia a execução até que os dados sejam retornados (só no caso de você precisar dos dados de forma síncrona)
     }
 }

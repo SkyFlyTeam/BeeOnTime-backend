@@ -65,6 +65,14 @@ public class FolgaServico {
         return folgaRepository.findByUsuarioCodIn(usuarios);
     }
 
+    public List<Folga> listarPorUsuario(Long usuarioCod) {
+        List<Folga> folgas = folgaRepository.findByUsuarioCodId(usuarioCod);
+        if (folgas.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return folgas;
+    }
+
     public List<Folga> listarFaltasPorEmpresaEData(Long empCod, LocalDate data) {
         YearMonth anoMes = YearMonth.from(data);
         LocalDate dataInicial = anoMes.atDay(1);
