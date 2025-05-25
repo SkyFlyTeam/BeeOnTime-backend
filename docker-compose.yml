@@ -65,6 +65,24 @@ services:
       - db
       - msusuario
 
+  msespelhoponto:
+    build: ./-ms-espelho-ponto
+    container_name: ms-espelho-ponto-dev
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./-ms-espelho-ponto:/msespelhoponto
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/botespelhoponto
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+      - msponto
+      - msbancohoras
+
   db:
     image: mysql:8
     container_name: mysql-dev
