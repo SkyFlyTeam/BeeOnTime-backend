@@ -25,7 +25,7 @@ public class PdfService {
 
     public byte[] generateUserPointsPdf(String empNome, String empCNPJ, String username, String nrRegistro, String usuarioCpf,
      String cargo, String setor, String bancoHoras, String horasTrabalhadas, String monthName, 
-     List<HorasTrabalhadasDTO> histPontos, List<PontoDTO> pontos, List<EspelhoPonto> espelhoPontoRelacionado) throws IOException, InterruptedException {
+     List<HorasTrabalhadasDTO> histPontos, List<PontoDTO> pontos, EspelhoPonto espelhoPontoRelacionado) throws IOException, InterruptedException {
         // Load your HTML template, replace placeholders as before
         String htmlContent = readHtmlFromFile("src/main/resources/templates/user_points_template.html");
         htmlContent = htmlContent.replace("${empNome}", empNome);
@@ -111,8 +111,8 @@ public class PdfService {
 
         String assinaturaInfo = "";
 
-        if (!espelhoPontoRelacionado.isEmpty()) {
-            if (espelhoPontoRelacionado.get(0).isEspelhoPontoAssinado()) {
+        if (espelhoPontoRelacionado != null) {
+            if (espelhoPontoRelacionado.isEspelhoPontoAssinado()) {
                 assinaturaInfo += "<h3>" + username + "</h3>";
                 assinaturaInfo += """
                         <p style="color: 0F172A;">
@@ -122,7 +122,7 @@ public class PdfService {
                         <p style="color: 0F172A;">
                         """;
                 // Get the Date object and convert to LocalDateTime to extract both date and time
-                Date espelhoPontoDataAssinatura = espelhoPontoRelacionado.get(0).getEspelhoPontoDataAssinatura();
+                Date espelhoPontoDataAssinatura = espelhoPontoRelacionado.getEspelhoPontoDataAssinatura();
     
                 // Convert to LocalDateTime if it's a Date object
                 LocalDateTime localDateTime = espelhoPontoDataAssinatura.toInstant()

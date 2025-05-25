@@ -86,8 +86,8 @@ public class EspelhoPontoController {
 		return ResponseEntity.ok(updated);
 	}
 
-@GetMapping("/generate-pdf/{usuarioCod}")
-public ResponseEntity<byte[]> generatePdf(@PathVariable int usuarioCod) {
+@GetMapping("/generate-pdf/{usuarioCod}/{espelhoPontoCod}")
+public ResponseEntity<byte[]> generatePdf(@PathVariable int usuarioCod, @PathVariable int espelhoPontoCod) {
 
     UsuarioDTO usuarioSelecionado = usuarioService.getUsuarioById(usuarioCod);
     EmpresaDTO empresaSelecionada = empresaService.getEmpresaById(usuarioSelecionado.getEmpCod());
@@ -110,14 +110,10 @@ public ResponseEntity<byte[]> generatePdf(@PathVariable int usuarioCod) {
     
     List<PontoDTO> pontos = pontoService.getPontoByUsuarioId(usuarioCod);
 
-    List<EspelhoPonto> espelhosPontosRelacionados = espelhoPontoService.findAllByUsuario(usuarioCod);
+    EspelhoPonto espelhosPontosRelacionados = espelhoPontoService.findById((long)espelhoPontoCod);
 
     DateTimeFormatter monthFormatter = DateTimeFormatter.ofPattern("MMMM", new Locale("pt", "BR"));
     String monthName = today.format(monthFormatter).toUpperCase();
-
-    List<EspelhoPonto> filteredEspelhoPonto = espelhosPontosRelacionados.stream()
-                            .filter(espelhoPonto -> espelhoPonto.getEspelhoPontoMes().equals(today.format(monthFormatter)))
-                            .collect(Collectors.toList());
 
     int year = LocalDate.now().getYear();
     int lastTwoDigits = year % 100;
@@ -137,7 +133,7 @@ public ResponseEntity<byte[]> generatePdf(@PathVariable int usuarioCod) {
 
     try {
         byte[] pdfBytes = pdfService.generateUserPointsPdf(empNome, empCNPJ, username, nrRegistro, usuarioCpf,
-         cargo, setor, bancoHoras, horasTrabalhadas, monthName, histPontos, pontos, filteredEspelhoPonto);
+         cargo, setor, bancoHoras, horasTrabalhadas, monthName, histPontos, pontos, espelhosPontosRelacionados);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=user_points.pdf")
                 .contentType(MediaType.APPLICATION_PDF)

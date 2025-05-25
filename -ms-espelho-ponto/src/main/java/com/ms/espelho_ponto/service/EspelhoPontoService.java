@@ -89,6 +89,7 @@ public class EspelhoPontoService {
         Date espelhoPontoDataGeracao = Date.from(today.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         for (UsuarioDTO usuario : usuarios) {
+            if (usuario.getNivelAcesso_cod() != 0){
             EspelhoPonto novoEspelhoPonto = new EspelhoPonto();
             novoEspelhoPonto.setEspelhoPontoAssinado(false); 
             novoEspelhoPonto.setEspelhoPontoDataGeracao(espelhoPontoDataGeracao); 
@@ -98,6 +99,7 @@ public class EspelhoPontoService {
             novoEspelhoPonto.setUsuarioCod(usuario.getUsuario_cod());
 
             repository.save(novoEspelhoPonto);
+            }
         }
 
         System.out.println("EspelhoPonto generated for all users for the previous month (" + lastMonthName + ").");
