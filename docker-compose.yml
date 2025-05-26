@@ -48,6 +48,24 @@ services:
       - db
       - msusuario
       - msponto
+  
+  msnotificacoes:
+    build: ./-ms-notificacoes
+    container_name: ms-notificacoes-dev
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./-ms-notificacoes:/notificacoes
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/botalertas
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+      - msponto
+      - mssolicitacao
 
   msbancohoras:
     build: ./-ms-banco-horas
