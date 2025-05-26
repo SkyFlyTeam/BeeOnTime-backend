@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.api.alerta.dto.AlertaDTO;
 import com.api.alerta.entidade.Alerta;
 import com.api.alerta.repositorio.AlertaRepositorio;
+import com.api.alerta.websocket.MyWebSocketHandler;
 
 @RestController
 @RequestMapping("/alerta")
@@ -27,6 +28,13 @@ public class AlertaControle {
 
     @Autowired
     private AlertaRepositorio repositorio;
+
+    private final MyWebSocketHandler webSocketHandler;
+
+    @Autowired
+    public AlertaControle(MyWebSocketHandler webSocketHandler) {
+        this.webSocketHandler = webSocketHandler;
+    }
 
     @GetMapping
         public List<AlertaDTO> listarAlertas() {
@@ -51,6 +59,7 @@ public class AlertaControle {
     @PostMapping
     public ResponseEntity<Alerta> cadastrarAlerta(@RequestBody Alerta alerta) {
         Alerta savedAlerta = repositorio.save(alerta);
+        webSocketHandler.broadcast("Novo registro criado: ");
         return new ResponseEntity<>(savedAlerta, HttpStatus.CREATED);
     }
 
