@@ -115,6 +115,13 @@ public class UsuarioControle {
   			return new ResponseEntity<>(usuario, HttpStatus.OK);
   		}
     }
+
+    @GetMapping("/empresa/{empCod}")
+    public ResponseEntity<List<Usuario>> obterUsuariosEmpresa(@PathVariable Long empCod) {
+    	List<Usuario> usuario = repositorio.findByEmpCod(empCod);
+		
+  		return new ResponseEntity<>(usuario, HttpStatus.OK);
+    }
     
     @PutMapping("/atualizar")
     public ResponseEntity<?> atualizarUsuario(@RequestBody Usuario usuario) {

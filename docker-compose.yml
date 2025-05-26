@@ -1,0 +1,118 @@
+version: "3.8"
+
+services:
+  msusuario:
+    build: ./-ms-usuario
+    container_name: ms-usuario-dev
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./-ms-usuario:/msusuario
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/botusuario
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+  
+  msponto:
+    build: ./-ms-ponto
+    container_name: ms-ponto-dev
+    ports:
+      - "8082:8082"
+    volumes:
+      - ./-ms-ponto:/msponto
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/botponto
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+    
+  mssolicitacao:
+    build: ./-ms-solicitacao
+    container_name: ms-solicitacao-dev
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./-ms-solicitacao:/mssolicitacao
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/botsolicitacao
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+      - msponto
+  
+  msnotificacoes:
+    build: ./-ms-notificacoes
+    container_name: ms-notificacoes-dev
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./-ms-notificacoes:/notificacoes
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/botalertas
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+      - msponto
+      - mssolicitacao
+
+  msbancohoras:
+    build: ./-ms-banco-horas
+    container_name: ms-banco-horas-dev
+    ports:
+      - "8084:8084"
+    volumes:
+      - ./-ms-banco-horas:/msbancohoras
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/botbancohoras
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+
+  msespelhoponto:
+    build: ./-ms-espelho-ponto
+    container_name: ms-espelho-ponto-dev
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./-ms-espelho-ponto:/msespelhoponto
+    environment:
+      - JAVA_OPTS=-Xmx512m
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3308/botespelhoponto
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+      - msusuario
+      - msponto
+      - msbancohoras
+
+  db:
+    image: mysql:8
+    container_name: mysql-dev
+    restart: always
+    environment:
+      MYSQL_DATABASE: botusuario
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_TCP_PORT: 3308
+    ports:
+      - "3308:3308"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

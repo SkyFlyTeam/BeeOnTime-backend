@@ -10,4 +10,5 @@ import java.util.List;
 public interface UsuarioRepositorio extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByUsuarioEmail(String funcEmail); // ✅ Correct method name
     List<Usuario> findBySetorCod(Long setorCod);
+    List<Usuario> findByEmpCod(Long empCod);
 }

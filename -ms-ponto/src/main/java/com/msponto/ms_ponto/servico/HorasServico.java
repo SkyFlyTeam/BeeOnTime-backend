@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +38,19 @@ public class HorasServico {
     @Autowired
     private FaltaRepositorio faltaRepositorio;
 
+    @Autowired
+    private VerificadorDiaTrabalhado verificadorDiaTrabalhado;
+
     public List<Horas> getAllHoras(){
         List<Horas> usuario_horas = horas_repo.findAll();
         return usuario_horas;
+    }
+    
+    public List<Horas> getPontuais() {
+    	List<Horas> horas = horas_repo.findAll();
+    	return horas.stream()
+    			.filter(hora -> hora.getAtraso() == null)
+    			.collect(Collectors.toList());
     }
 
     public List<Horas> getUsuarioHoras(Long usuario_cod){
@@ -214,11 +225,14 @@ public class HorasServico {
                 Optional<Horas>  horas_existe = getOptionalUsuarioHorasByDate(usuario.getUsuario_cod(), dataAtual);
 
                 if(horas_existe.isEmpty()){
-                    VerificadorDiaTrabalhado verificador = new VerificadorDiaTrabalhado();
-                    Boolean dia_trabalhado = verificador.verificar(usuario, dataAtual);
-                    
-                    if(dia_trabalhado){
-                        createEmptyHoras(usuario, dataAtual);
+                    Boolean is_feriado = verificadorDiaTrabalhado.verificarFeriado(usuario.getEmpCod(), dataAtual);
+                    Boolean is_folga = verificadorDiaTrabalhado.verificarFolga(usuario.getUsuario_cod(), dataAtual);
+                    if(!is_feriado && is_folga){
+                        Boolean dia_trabalhado = verificadorDiaTrabalhado.verificar(usuario, dataAtual);
+                        
+                        if(dia_trabalhado){
+                            createEmptyHoras(usuario, dataAtual);
+                        }
                     }
                 }
             }

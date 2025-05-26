@@ -4,11 +4,15 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "solicitacao")
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Solicitacao {
 
     @Id
@@ -28,12 +32,13 @@ public class Solicitacao {
 
     @Column(name = "solicitacao_devolutiva", length = 120)
     private String solicitacaoDevolutiva;
-
+    
+    @ElementCollection
     @Column(name = "solicitacao_dataPeriodo", nullable = false)
-    private LocalDate solicitacaoDataPeriodo = LocalDate.now();
+    private List<LocalDate> solicitacaoDataPeriodo;
     
     @Column(name = "usuario_cod")
-    private Long usuarioCod; // Alterado para Long
+    private Long usuarioCod; 
 
     @Column(name = "horas_solicitadas", nullable = true)
     private Double horasSolicitadas;
@@ -88,14 +93,6 @@ public class Solicitacao {
 
     public void setSolicitacaoDevolutiva(String solicitacaoDevolutiva) {
         this.solicitacaoDevolutiva = solicitacaoDevolutiva;
-    }
-
-    public LocalDate getSolicitacaoDataPeriodo() {
-        return solicitacaoDataPeriodo;
-    }
-
-    public void setSolicitacaoDataPeriodo(LocalDate solicitacaoDataPeriodo) {
-        this.solicitacaoDataPeriodo = solicitacaoDataPeriodo;
     }
 
     public SolicitacaoStatus getSolicitacaoStatus() {
@@ -169,4 +166,14 @@ public class Solicitacao {
     public void setHorasSolicitadas(Double horasSolicitadas) {
         this.horasSolicitadas = horasSolicitadas;
     }
+
+	public List<LocalDate> getSolicitacaoDataPeriodo() {
+		return solicitacaoDataPeriodo;
+	}
+
+	public void setSolicitacaoDataPeriodo(List<LocalDate> solicitacaoDataPeriodo) {
+		this.solicitacaoDataPeriodo = solicitacaoDataPeriodo;
+	}
+    
+    
 }

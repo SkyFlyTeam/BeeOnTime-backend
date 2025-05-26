@@ -12,5 +12,5 @@ public interface FaltaRepositorio extends JpaRepository<Falta, Long> {
 
     List<Falta> findByUsuarioCod(Long usuarioCod);
     Falta findByFaltaDiaAndUsuarioCod(LocalDate faltaDia, Long usuarioCod);
-
+    List<Falta> findByFaltaDiaBetween(LocalDate starDate, LocalDate endDate);
 }

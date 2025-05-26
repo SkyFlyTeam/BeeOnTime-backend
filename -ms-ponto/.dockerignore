@@ -1,0 +1,34 @@
+# Maven / Gradle build directories (compiled code)
+target/
+build/
+
+# Local environment settings
+.env
+*.env
+
+# IDE files and folders
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+*.settings/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Git
+.git
+.gitignore
+
+# Temporary files
+*.tmp
+*.swp
+
+# Dependency caches (optional, if you accidentally copy local repos)
+.mvn/
+.gradle

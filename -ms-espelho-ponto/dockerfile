@@ -1,0 +1,23 @@
+FROM eclipse-temurin:21-jdk
+
+# Install maven if you're not using pre-built jars
+RUN apt-get update && apt-get install -y maven
+
+# Install dependencies and wkhtmltopdf
+RUN apt-get update && apt-get install -y wkhtmltopdf
+
+ENV XDG_RUNTIME_DIR=/tmp/runtime-root
+RUN mkdir -p /tmp/runtime-root && chmod 700 /tmp/runtime-root
+
+# Create app directory inside container
+WORKDIR /msespelhoponto
+
+# Copy pom.xml and download dependencies early (for caching)
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy the rest of the source code
+COPY . .
+
+# Default command to build and run app (for dev purposes)
+CMD ["mvn", "spring-boot:run"]
