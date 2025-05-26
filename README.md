@@ -10,7 +10,7 @@ Instale DOCKER na sua máquina:
 Com o docker rodando em sua máquina, abra um terminal na pasta onde foi clonado o repositório e excute o seguinte comando:
 
 ```bash
-# Inicializa a aplicação (Todos os mmicro-serviços)
+# Inicializa a aplicação (Todos os micro-serviços)
 
 docker compose up --build
 ```
@@ -32,6 +32,7 @@ create database botponto;
 create database botsolicitacao;
 create database botbancohoras;
 create database botespelhoponto;
+create database botalertas;
 /* Adicionar nova database aqui caso tenha sido criado um novo micro-serviço */
 ```
 
