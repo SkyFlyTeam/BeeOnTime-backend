@@ -1,5 +1,6 @@
 package com.fatec.ms_usuario.controle;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,16 @@ public class FolgaControle {
     @GetMapping("/setor/{setorCod}")
     public ResponseEntity<?> buscarPorSetor(@PathVariable Long setorCod){
     	return ResponseEntity.ok(folgaServico.listarPorSetor(setorCod));
+    }
+
+    @GetMapping("/empresa/{empCod}/mes/{data}")
+    public ResponseEntity<?> buscarPorEmpresaEData(@PathVariable Long empCod, @PathVariable LocalDate data){
+    	return ResponseEntity.ok(folgaServico.listarFaltasPorEmpresaEData(empCod, data));
+    }
+
+    @GetMapping("/usuario/{usuarioCod}")
+    public ResponseEntity<?> buscarPorUsuario(@PathVariable Long usuarioCod){
+    	return ResponseEntity.ok(folgaServico.listarPorUsuario(usuarioCod));
     }
 
     @PostMapping("/cadastrar")

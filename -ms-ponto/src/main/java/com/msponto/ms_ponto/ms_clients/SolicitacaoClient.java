@@ -1,10 +1,10 @@
 package com.msponto.ms_ponto.ms_clients;
 
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import com.msponto.ms_ponto.dto.SolicitacaoDTO;
 
