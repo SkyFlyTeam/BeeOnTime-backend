@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+.wrapper {
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  /* Replace gap with margin */
+}
+
+.header-block {
+  background-color: #FFB503;
+  width: 21px;
+  height: 80px;
+  border-radius: 0 8px 8px 0;
+  margin-right: 1rem; /* instead of transform and absolute */
+  flex-shrink: 0;
+}
+
+.info-display {
+  border: 2px solid gray;
+  border-radius: 10px;
+  padding: 20px 40px;
+  margin: 30px 0;
+}
+
+.info-items table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.points-table table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.points-table table td,
+.points-table table th {
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+footer {
+  line-height: 0.6;
+  color: #0F172A;
+}
+
+  </style>
+
+</head>
+<body>
+  <div class="wrapper">
+      <header>
+        <div class="header-top">
+          <div class="header-block"></div>
+          <p style="font-size: 36px;"><strong>${empNome}</strong></p>
+          <p style="margin-left: 30px;">CNPJ: ${empCNPJ}</p>
+        </div>
+        <h2>MÊS ${monthName}</h2>
+      </header>
+
+      <br>
+
+      <div class="info-display">
+        <div class="info-items">
+          <table>
+            <tr>
+              <td><p><strong>FUNCIONÁRIO</strong></p></td>
+              <td><p>${username}</p></td>
+            </tr>
+            <tr>
+              <td><p><strong>NÚMERO DE REGISTRO</strong></p></td>
+              <td><p>${nrRegistro}</p></td>
+            </tr>
+            <tr>
+              <td><p><strong>CARGO/SETOR</strong></p></td>
+              <td><p>${cargo} - ${setor}</p></td>
+            </tr>
+            <tr>
+              <td><p><strong>JORNADA DE TRABALHO</strong></p></td>
+              <td><p>8h diárias, Seg a Sex</p></td>
+            </tr>
+            <tr>
+              <td><p><strong>HORAS MÊS</strong></p></td>
+              <td><p style="color: green;">${horasTrabalhadas} horas</p></td>
+              <td><p><strong>BANCO DE HORAS</strong></p></td>
+              <td><p style="color: green;">${bancoHoras} horas</p></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="points-table">
+        <table style="border-collapse: collapse;">
+          <tr>
+            <th>Data</th>
+            <th>Semana</th>
+            <th>Entrada</th>
+            <th>Início <br> Intervalo</th>
+            <th>Fim <br> Intervalo</th>
+            <th>Saída</th>
+            <th>Horas <br> Trabalhadas</th>
+            <th>Saldo</th>
+          </tr>
+          <tr>
+            <td colspan="8"><div style="border: 1px solid black;"></div></td>
+          </tr>
+          ${pontos}
+          <tr style="text-align: center;">
+            <td colspan="5"></td>
+            <td style="background-color: #CBD5E1; border-radius: 6px 0 0 6px; height: 40px;"><strong>TOTAL</strong></td>
+            <td style="background-color: #CBD5E1; height: 40px;">${horasTrabalhadas}</td>
+            <td style="background-color: #CBD5E1; height: 40px; color: green; border-radius: 0 0 6px 0;">${bancoHoras}</td>
+          </tr>
+        </table>
+      </div>
+
+      <footer>
+        ${assinatura}
+      </footer>
+  </div>
+</body>
+</html>
