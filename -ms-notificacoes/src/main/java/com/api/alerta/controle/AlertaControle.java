@@ -45,6 +45,8 @@ public class AlertaControle {
             dto.setAlertaCod(alerta.getAlertaCod());
             dto.setAlertaMensagem(alerta.getAlertaMensagem());
             dto.setAlertaDataCriacao(alerta.getAlertaDataCriacao());
+            dto.setAlertaSetorDirecionado(alerta.getAlertaSetorDirecionado()); // <--
+            dto.setAlertaUserAlvo(alerta.getAlertaUserAlvo());                 // <--
 
             AlertaDTO.AlertaTipoDTO tipoDTO = new AlertaDTO.AlertaTipoDTO(
                 alerta.getTipoAlerta().getTipoAlertaCod(),
@@ -59,7 +61,9 @@ public class AlertaControle {
     @PostMapping
     public ResponseEntity<Alerta> cadastrarAlerta(@RequestBody Alerta alerta) {
         Alerta savedAlerta = repositorio.save(alerta);
-        webSocketHandler.broadcast("Novo registro criado: ");
+        String mensagem = "Alerta carregado: Setor = " + alerta.getAlertaSetorDirecionado() +
+                          ", Usuário Alvo = " + alerta.getAlertaUserAlvo();
+        webSocketHandler.broadcast(mensagem);
         return new ResponseEntity<>(savedAlerta, HttpStatus.CREATED);
     }
 
@@ -71,6 +75,9 @@ public class AlertaControle {
                 dto.setAlertaCod(alerta.getAlertaCod());
                 dto.setAlertaMensagem(alerta.getAlertaMensagem());
                 dto.setAlertaDataCriacao(alerta.getAlertaDataCriacao());
+                dto.setAlertaSetorDirecionado(alerta.getAlertaSetorDirecionado());
+                dto.setAlertaUserAlvo(alerta.getAlertaUserAlvo());
+
 
                 AlertaDTO.AlertaTipoDTO tipoDTO = new AlertaDTO.AlertaTipoDTO(
                     alerta.getTipoAlerta().getTipoAlertaCod(),
@@ -92,6 +99,8 @@ public class AlertaControle {
                 dto.setAlertaCod(alerta.getAlertaCod());
                 dto.setAlertaMensagem(alerta.getAlertaMensagem());
                 dto.setAlertaDataCriacao(alerta.getAlertaDataCriacao());
+                dto.setAlertaSetorDirecionado(alerta.getAlertaSetorDirecionado());
+                dto.setAlertaUserAlvo(alerta.getAlertaUserAlvo());
 
                 AlertaDTO.AlertaTipoDTO tipoDTO = new AlertaDTO.AlertaTipoDTO(
                     alerta.getTipoAlerta().getTipoAlertaCod(),
