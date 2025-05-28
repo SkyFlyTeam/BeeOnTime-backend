@@ -24,6 +24,12 @@ public class Alerta {
     @Column
     private Date alertaDataCriacao;
 
+    @Column
+    private String alertaSetorDirecionado;
+
+    @Column
+    private int alertaUserAlvo;
+
     @ManyToOne
     @JoinColumn(name = "tipoAlertaCod", nullable = false)
     @JsonBackReference
@@ -59,5 +65,21 @@ public class Alerta {
 
     public void setTipoAlerta(AlertaTipo tipoAlerta) {
         this.tipoAlerta = tipoAlerta;
+    }
+
+    public String getAlertaSetorDirecionado() {
+        return alertaSetorDirecionado;
+    }
+
+    public void setAlertaSetorDirecionado(String alertaSetorDirecionado) {
+        this.alertaSetorDirecionado = alertaSetorDirecionado;
+    }
+
+    public int getAlertaUserAlvo() {
+        return alertaUserAlvo;
+    }
+
+    public void setAlertaUserAlvo(int alertaUserAlvo) {
+        this.alertaUserAlvo = alertaUserAlvo;
     }
 }
